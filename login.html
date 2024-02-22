@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            background-image: url('hotel.jpg');
+            background-size: cover;
+            background-position: center;          
+        }
+        .container {
+            text-align: center;
+            margin-top: 100px;
+        }
+        .login-box {
+            width: 300px;
+            margin: 0 auto;
+            background: rgb(152, 214, 214);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        input {
+            margin-bottom: 20px;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #27e20e;
+            color: rgb(247, 7, 119);
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px; 
+        }
+        h1{
+            color: #080808fd; 
+        }
+        h2 {
+            color: #0b2bdd; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><b><u>Enter the Name Of Hotel</u></b></h1>
+        <div class="login-box">
+            <form action="your_action_page.php" method="post">
+                <h1><b><u>Guest Is God </u></b></h1>
+                <h2><u>LOG IN</u></h2>
+                <button type="button" onclick="window.location.href='admin_login.html'">Admin</button>
+                <button type="button" onclick="window.location.href='staff_login.html'">Staff</button><br>
+                
+                <input type="text" placeholder="Enter Admin/Staff" name="uname" required><br>        
+                <input type="password" placeholder="Enter Password" name="psw" required><br>
+                <button type="submit" value="submit"><a href="menu.html">Sign In</a></button>
+                
+            </form>
+        </div>
+    </div>
+</body>
+</html>
