@@ -1,65 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Login</title>
     <style>
         body {
-            background-image: url('hotel.jpg');
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: url('lobby.jpg') no-repeat center center fixed;
             background-size: cover;
-            background-position: center;          
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .container {
-            text-align: center;
-            margin-top: 100px;
-        }
-        .login-box {
-            width: 300px;
-            margin: 0 auto;
-            background: rgb(152, 214, 214);
+
+        .glass-container {
+            
             padding: 20px;
             border-radius: 10px;
+            width: 300px;
         }
+
+        .login-box {
+            text-align: center;
+            background: none; /* Set background to none or transparent */
+        }
+
+        .role-buttons button {
+        background-color: #d0d3da;
+        color: #080808;
+        padding: 10px 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 5px;
+        width: 40%; /* Adjusted width to fit both buttons side by side */
+        font-size: 16px;
+        display: inline-block; /* Display buttons in a line */
+        margin-right: 4%; /* Added margin-right to create a gap between buttons */
+        }
+
+
+
+        .role-buttons button:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
         input {
             margin-bottom: 20px;
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
-        button {
-            background-color: #27e20e;
-            color: rgb(247, 7, 119);
-            padding: 10px 15px;
+
+        button[type="submit"] {
+            background-color: #2ecc71; /* Green color */
+            color: #fff; /* White text */
+            padding: 9px; /* Increased padding for height */
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-bottom: 10px; 
+            width: 100%; /* Increased width for the login button */
+            font-size: 16px;
         }
-        h1{
-            color: #080808fd; 
+
+        button[type="submit"]:hover {
+            background-color: #27ae60; /* Darker green on hover */
         }
-        h2 {
-            color: #0b2bdd; 
-        }
+
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1><b><u>Enter the Name Of Hotel</u></b></h1>
+    <div class="glass-container">
         <div class="login-box">
-            <form action="your_action_page.php" method="post">
-                <h1><b><u>Guest Is God </u></b></h1>
-                <h2><u>LOG IN</u></h2>
-                <button type="button" onclick="window.location.href='admin_login.html'">Admin</button>
-                <button type="button" onclick="window.location.href='staff_login.html'">Staff</button><br>
-                
-                <input type="text" placeholder="Enter Admin/Staff" name="uname" required><br>        
-                <input type="password" placeholder="Enter Password" name="psw" required><br>
-                <button type="submit" value="submit"><a href="menu.html">Sign In</a></button>
-                
+            <h2>LOGIN</h2>
+
+            <div class="role-buttons">
+                <button onclick="window.location.href='admin_login.html'">Admin</button>
+                <button onclick="window.location.href='staff_login.html'">Staff</button>
+            </div>
+
+            <form action="conn.php" method="POST">
+                <input type="text" id="username" name="Username" required placeholder="Username">
+                <input type="password" id="password" name="Password" required placeholder="Password">
+                <div class="options">
+
+                </div>
+                <button type="submit" value="submit"><a href="menu.html"> Login </a> </button>
+
             </form>
         </div>
     </div>
 </body>
+
 </html>
