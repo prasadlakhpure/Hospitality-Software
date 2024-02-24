@@ -120,11 +120,11 @@
 
     <div class="main-content">
         <div class="content" id="content-booking">
-            <h2><u><i>Booking Details</i></u></h2>
+            <h2><i>Booking!</i></u></h2>
             <div class="inputwrapper">
                 <div class="bookingbx">
 
-                    <form id="bookingForm" onsubmit="event.preventDefault(); calculateTaxes();">
+                    <form  action="connect.php" method="post" id="bookingForm" onsubmit="event.preventDefault(); calculateTaxes();">
                         <label for="Date"><b>Date</b></label>
                         <input type="date" id="date" name="date"> <br>
                         <label for="myTime"><b>Time</b></label>
@@ -328,7 +328,7 @@
             <form id="checkin" onsubmit="event.preventDefault(); calculateTaxes();">
                 <div class="checkinwrap">
                     <div class="checkinbx">
-                        <h2><u><i>Check In Details</i></u></h2>
+                        <h2><i>Check In</i></h2>
                         <label for="arrivaldate"><b>Arrival Date</b></label>
                         <input type="date" id="arrivaldate" name="arrivaldate"> <br>
                         <label for="myTime"><b> Arrival Time</b></label>
@@ -376,7 +376,7 @@
                     </div>
 
                     <div class="checkinbx">
-                        <h2><b><u><i>Room Details</i></u></b></h2>
+                        <h2><b><i>Room Details</i></u></b></h2>
                         <label for="roomtype"><b>Room Type</b></label>
                         <select id="roomtype" name="roomtype">
                             <option value="singleroomac">Single Room AC</option>
@@ -411,7 +411,7 @@
                     </div>
 
                     <div class="checkinbx">
-                        <h2><b><u><i>Payment Mode</i></u></b></h2>
+                        <h2><b><i>Payment Mode</i></b></h2>
                         <label for="billinstruction"><b>Billing Instruction</b></label>
                         <input type="text" id="billinstruction" name="billinstruction" placeholder="Bill Instruction"><br>
 
