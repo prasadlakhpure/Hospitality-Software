@@ -97,7 +97,22 @@ body {
 
 }
 
-.firstcheckbx,.seccheckbx {
+.roominbx1 {
+    width: 100%;
+    display: flex;
+
+}
+.roominbx1 label{
+    /* width: 100px; */
+    padding:0px 20px;
+}
+.roominbx1 select{
+    width: 250px;
+}
+
+.firstcheckbx,
+.roominbx1 {
+    width: 100%;
     border-bottom: 2px solid gray;
     padding-bottom: 10px;
 }
@@ -106,8 +121,8 @@ form {
     margin-top: 10px;
 }
 
-.checkincontainer label ,
-.bookingbx label{
+.checkincontainer label,
+.bookingbx label {
     display: inline-block;
     margin-bottom: 5px;
     color: #555;

@@ -6,8 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Branch</title>
     <style>
-   
 
+   /* .roomdesc{
+    border: 1px solid;
+    width: 50%;
+    margin: 0px auto;
+    height: 500px;
+   }
+   .roomlist{
+    border: 1px solid;
+    height: 370px;
+    width: 90%;
+    margin: 0px auto;
+   } */
+   .navbar{
+    /* border: 1px solid; */
+    width: 100%;
+    background-color: #34495e;
+    display: flex;
+    flex-wrap: wrap;
+    /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr; */
+
+   }
+   .navbar button{
+    margin: 5px 40px;
+    border-radius: 5px;
+    background-color:  #e74c3c ;
+    /* margin: 5px 30px 5px 30px; */
+
+   }
     </style>
 </head>
 
@@ -49,13 +76,13 @@
 
         function roomdescriptionmaster() {
             const roomDiscriptionMaster = `
-                <div id="roomDiscriptionMastertion">
+                <div id="roomDiscriptionMaster" class="roomdesc">
                     <h2><b> Room Discription List</b></h2>
                   <div class="roomlist">
                     <label for="code">Code:</label>
                     <input type="text" id="code"> <br> 
-                    <label for="description">Description:</label>
-                    <input type="text" id="descritption"> <br>
+                    <label for="description">Description</label>
+                    <input type="text" id="description"> <br>
                     <button onclick="insertRoomType()">Insert</button>
                     <button onclick="modifyRoomType()">Modify</button>
                     <button onclick="deleteRoomType()">Delete</button>

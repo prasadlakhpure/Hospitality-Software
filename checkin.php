@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CheckIn</title>
-    <link rel="stylesheet" href="style11.css">
+    <link rel="stylesheet" href="./style11.css">
     <script>
         var now = new Date();
         var formattedTime = now.toISOString().slice(11, 16);
@@ -167,7 +167,7 @@
                 </div>
                 <h2><b><i>Room Details</i></u></b></h2>
                 <div class="checkinbx seccheckbx">
-                    <div class="roominbx">
+                    <div class="roominbx1">
                         <label for="roomtype"><b>Room Type</b></label>
                         <select id="roomtype" name="roomtype" value="<?php echo isset($roomType) ? $roomType : ""; ?>">
                             <option value="single room ac">Single Room AC</option>
@@ -200,94 +200,95 @@
                             <option value="room only">Room Only</option>
                         </select><br>
                     </div>
-                    <h2><b><i>Payment Mode</i></u></b></h2>
-                    <div class="checkinbx">
-                        <div class="checkincontainer">
-                            <label for="billinstruction"><b>Billing Instruction</b></label>
-                            <select id="billinstruction" name="billinstruction" value="<?php echo isset($billingInstruction) ? $billingInstruction : ""; ?>">
-                                <option value="buildtocompany">Build to Company</option>
-                                <option value="directpaymentbyguest">Direct Payment by Guest</option>
-                                <option value="guestroomterif+foodfromcompany">Guest Room Terif + Food From Company</option>
-                                <option value="companyroomterif+foodbyself">Company Room Terif + Food By Self</option>
+                </div>
+                <h2><b><i>Payment Mode</i></u></b></h2>
+                <div class="checkinbx">
+                    <div class="checkincontainer">
+                        <label for="billinstruction"><b>Billing Instruction</b></label>
+                        <select id="billinstruction" name="billinstruction" value="<?php echo isset($billingInstruction) ? $billingInstruction : ""; ?>">
+                            <option value="buildtocompany">Build to Company</option>
+                            <option value="directpaymentbyguest">Direct Payment by Guest</option>
+                            <option value="guestroomterif+foodfromcompany">Guest Room Terif + Food From Company</option>
+                            <option value="companyroomterif+foodbyself">Company Room Terif + Food By Self</option>
+                        </select><br>
+                        <label for="discount"><b>Discount (%)</b></label>
+                        <input type="number" id="discount" name="discount" placeholder="Discount Percentage" oninput="calculateTaxes()" value="<?php echo isset($discount) ? $discount : ""; ?>"><br>
+                        <label for="advance"><b>Advance</b></label>
+                        <input type="number" id="advance" name="advance" placeholder="Advance" oninput="calculateTaxes()" value="<?php echo isset($advance) ? $advance : ""; ?>"><br>
+                        <label for="roomCharge"><b>Room Charge</b></label>
+                        <input type="number" id="roomCharge" name="roomCharge" placeholder="Room Charge" oninput="calculateTaxes()" value="<?php echo isset($roomCharge) ? $roomCharge : ""; ?>"><br>
+                    </div>
+                    <div class="checkincontainer">
+                        <label for="foodcharge"><b>Food Charge</b></label>
+                        <input type="number" id="foodcharge" name="foodcharge" placeholder="Food Charge" oninput="calculateTaxes()" value="<?php echo isset($foodCharge) ? $foodCharge : ""; ?>"><br>
+                        <label for="cgst"><b>CGST %</b></label>
+                        <input type="number" id="cgst" name="cgst" placeholder="CGST Percentage" oninput="calculateTaxes()" value="<?php echo isset($cgstPecentage) ? $cgstPecentage : ""; ?>"><br>
+                        <label for="sgst"><b>SGST %</b></label>
+                        <input type="number" id="sgst" name="sgst" placeholder="SGST Percentage" oninput="calculateTaxes()" value="<?php echo isset($sgstPercentage) ? $sgstPercentage : ""; ?>"><br>
+                        <label for="discountAmount"><b>Discount Amount</b></label>
+                        <input type="text" name="discountAmount" id="discountAmount" placeholder="Discount Amount" value="<?php echo isset($discountAmount) ? $discountAmount : ""; ?>" readonly><br>
+                    </div>
+                    <div class="checkincontainer">
+                        <label for="cgstAmountInput"><b>CGST Amount</b></label>
+                        <input type="text" name="cgstAmountInput" id="cgstAmountInput" placeholder="CGST Amount" value="<?php echo isset($cgstAmount) ? $cgstAmount : ""; ?>" readonly><br>
+                        <label for="sgstAmountInput"><b>SGST Amount</b></label>
+                        <input type="text" name="sgstAmountInput" id="sgstAmountInput" placeholder="SGST Amount" value="<?php echo isset($sgstAmount) ? $sgstAmount : ""; ?>" readonly><br>
+                        <label for="extracharge"><b>Extra Charge</b></label>
+                        <input type="number" id="extracharge" name="extracharge" placeholder="Extra Charge" oninput="calculateTaxes()" value="<?php echo isset($extraCharge) ? $extraCharge : ""; ?>"><br>
+                        <label for="totalAmountAfterTaxesInput"><b>Total Amount</b></label>
+                        <input type="text" id="totalAmountAfterTaxesInput" name="totalAmount" placeholder="Total Amount" value="<?php echo isset($totalAmount) ? $totalAmount : ""; ?>" readonly><br>
+                    </div>
+                    <div class="checkincontainer">
+                        <label for="paymentMode"><b>Payment Mode</b></label>
+                        <select id="paymentMode" name="paymentMode" onchange="showPaymentDetails()" value="<?php echo isset($paymentMode) ? $paymentMode : ""; ?>">
+                            <option value="cash">Cash</option>
+                            <option value="debit">Debit Card</option>
+                            <option value="credit">Credit Card</option>
+                            <option value="upi">UPI</option>
+                        </select><br>
+
+                        <div id="debitCardDetails" style="display:none;">
+                            <label for="debitCardNumber"><b>Debit Card Number</b></label>
+                            <input type="text" id="debitCardNumber" name="debitCardNumber" placeholder="Enter Debit Card Number" value="<?php echo isset($debitCardNumber) ? $debitCardNumber : ""; ?>"><br>
+                            <label for="debitCardHolder"><b>Cardholder Name</b></label>
+                            <input type="text" id="debitCardHolder" name="debitCardHolder" placeholder="Enter Cardholder Name" value="<?php echo isset($debitCardHolder) ? $debitCardHolder : ""; ?>"><br>
+                            <label for="debitCardExpiry"><b>Expiry Date</b></label>
+                            <input type="text" id="debitCardExpiry" name="debitCardExpiry" placeholder="MM/YY" value="<?php echo isset($debitCardExpiry) ? $debitCardExpiry : ""; ?>"><br>
+                            <label for="debitCardCVV"><b>CVV</b></label>
+                            <input type="text" id="debitCardCVV" name="debitCardCVV" placeholder="CVV" value="<?php echo isset($debitCardCVV) ? $debitCardCVV : ""; ?>"><br>
+                        </div>
+
+
+                        <div id="creditCardDetails" style="display:none;">
+                            <label for="creditCardType"><b>Card Type</b></label>
+                            <select id="creditCardType" name="creditCardType" value="<?php echo isset($creditCardType) ? $$creditCardType : ""; ?>">
+                                <option value="visa">Visa</option>
+                                <option value="rupay">RuPay</option>
+                                <option value="mastercard">MasterCard</option>
+                                <option value="amex">American Express</option>
                             </select><br>
-                            <label for="discount"><b>Discount (%)</b></label>
-                            <input type="number" id="discount" name="discount" placeholder="Discount Percentage" oninput="calculateTaxes()" value="<?php echo isset($discount) ? $discount : ""; ?>"><br>
-                            <label for="advance"><b>Advance</b></label>
-                            <input type="number" id="advance" name="advance" placeholder="Advance" oninput="calculateTaxes()" value="<?php echo isset($advance) ? $advance : ""; ?>"><br>
-                            <label for="roomCharge"><b>Room Charge</b></label>
-                            <input type="number" id="roomCharge" name="roomCharge" placeholder="Room Charge" oninput="calculateTaxes()" value="<?php echo isset($roomCharge) ? $roomCharge : ""; ?>"><br>
+                            <label for="creditCardNumber"><b>Credit Card Number</b></label>
+                            <input type="text" id="creditCardNumber" name="creditCardNumber" placeholder="Enter Credit Card Number" value="<?php echo isset($creditCardNumber) ? $creditCardNumber : ""; ?>"><br>
+                            <label for="creditCardHolder"><b>Cardholder Name</b></label>
+                            <input type="text" id="creditCardHolder" name="creditCardHolder" placeholder="Enter Cardholder Name" value="<?php echo isset($creditCardHolder) ? $creditCardHolder : ""; ?>"><br>
+                            <label for="creditCardExpiry"><b>Expiry Date</b></label>
+                            <input type="text" id="creditCardExpiry" name="creditCardExpiry" placeholder="MM/YY" value="<?php echo isset($creditCardExpiry) ? $creditCardExpiry : ""; ?>"><br>
+                            <label for="creditCardCVV"><b>CVV</b></label>
+                            <input type="text" id="creditCardCVV" name="creditCardCVV" placeholder="CVV" value="<?php echo isset($creditCardCVV) ? $creditCardCVV : ""; ?>"><br>
                         </div>
-                        <div class="checkincontainer">
-                            <label for="foodcharge"><b>Food Charge</b></label>
-                            <input type="number" id="foodcharge" name="foodcharge" placeholder="Food Charge" oninput="calculateTaxes()" value="<?php echo isset($foodCharge) ? $foodCharge : ""; ?>"><br>
-                            <label for="cgst"><b>CGST %</b></label>
-                            <input type="number" id="cgst" name="cgst" placeholder="CGST Percentage" oninput="calculateTaxes()" value="<?php echo isset($cgstPecentage) ? $cgstPecentage : ""; ?>"><br>
-                            <label for="sgst"><b>SGST %</b></label>
-                            <input type="number" id="sgst" name="sgst" placeholder="SGST Percentage" oninput="calculateTaxes()" value="<?php echo isset($sgstPercentage) ? $sgstPercentage : ""; ?>"><br>
-                            <label for="discountAmount"><b>Discount Amount</b></label>
-                            <input type="text" name="discountAmount" id="discountAmount" placeholder="Discount Amount" value="<?php echo isset($discountAmount) ? $discountAmount : ""; ?>" readonly><br>
-                        </div>
-                        <div class="checkincontainer">
-                            <label for="cgstAmountInput"><b>CGST Amount</b></label>
-                            <input type="text" name="cgstAmountInput" id="cgstAmountInput" placeholder="CGST Amount" value="<?php echo isset($cgstAmount) ? $cgstAmount : ""; ?>" readonly><br>
-                            <label for="sgstAmountInput"><b>SGST Amount</b></label>
-                            <input type="text" name="sgstAmountInput" id="sgstAmountInput" placeholder="SGST Amount" value="<?php echo isset($sgstAmount) ? $sgstAmount : ""; ?>" readonly><br>
-                            <label for="extracharge"><b>Extra Charge</b></label>
-                            <input type="number" id="extracharge" name="extracharge" placeholder="Extra Charge" oninput="calculateTaxes()" value="<?php echo isset($extraCharge) ? $extraCharge : ""; ?>"><br>
-                            <label for="totalAmountAfterTaxesInput"><b>Total Amount</b></label>
-                            <input type="text" id="totalAmountAfterTaxesInput" name="totalAmount" placeholder="Total Amount" value="<?php echo isset($totalAmount) ? $totalAmount : ""; ?>" readonly><br>
-                        </div>
-                        <div class="checkincontainer">
-                            <label for="paymentMode"><b>Payment Mode</b></label>
-                            <select id="paymentMode" name="paymentMode" onchange="showPaymentDetails()" value="<?php echo isset($paymentMode) ? $paymentMode : ""; ?>">
-                                <option value="cash">Cash</option>
-                                <option value="debit">Debit Card</option>
-                                <option value="credit">Credit Card</option>
-                                <option value="upi">UPI</option>
-                            </select><br>
-
-                            <div id="debitCardDetails" style="display:none;">
-                                <label for="debitCardNumber"><b>Debit Card Number</b></label>
-                                <input type="text" id="debitCardNumber" name="debitCardNumber" placeholder="Enter Debit Card Number" value="<?php echo isset($debitCardNumber) ? $debitCardNumber : ""; ?>"><br>
-                                <label for="debitCardHolder"><b>Cardholder Name</b></label>
-                                <input type="text" id="debitCardHolder" name="debitCardHolder" placeholder="Enter Cardholder Name" value="<?php echo isset($debitCardHolder) ? $debitCardHolder : ""; ?>"><br>
-                                <label for="debitCardExpiry"><b>Expiry Date</b></label>
-                                <input type="text" id="debitCardExpiry" name="debitCardExpiry" placeholder="MM/YY" value="<?php echo isset($debitCardExpiry) ? $debitCardExpiry : ""; ?>"><br>
-                                <label for="debitCardCVV"><b>CVV</b></label>
-                                <input type="text" id="debitCardCVV" name="debitCardCVV" placeholder="CVV" value="<?php echo isset($debitCardCVV) ? $debitCardCVV : ""; ?>"><br>
-                            </div>
-
-
-                            <div id="creditCardDetails" style="display:none;">
-                                <label for="creditCardType"><b>Card Type</b></label>
-                                <select id="creditCardType" name="creditCardType" value="<?php echo isset($creditCardType) ? $$creditCardType : ""; ?>">
-                                    <option value="visa">Visa</option>
-                                    <option value="rupay">RuPay</option>
-                                    <option value="mastercard">MasterCard</option>
-                                    <option value="amex">American Express</option>
-                                </select><br>
-                                <label for="creditCardNumber"><b>Credit Card Number</b></label>
-                                <input type="text" id="creditCardNumber" name="creditCardNumber" placeholder="Enter Credit Card Number" value="<?php echo isset($creditCardNumber) ? $creditCardNumber : ""; ?>"><br>
-                                <label for="creditCardHolder"><b>Cardholder Name</b></label>
-                                <input type="text" id="creditCardHolder" name="creditCardHolder" placeholder="Enter Cardholder Name" value="<?php echo isset($creditCardHolder) ? $creditCardHolder : ""; ?>"><br>
-                                <label for="creditCardExpiry"><b>Expiry Date</b></label>
-                                <input type="text" id="creditCardExpiry" name="creditCardExpiry" placeholder="MM/YY" value="<?php echo isset($creditCardExpiry) ? $creditCardExpiry : ""; ?>"><br>
-                                <label for="creditCardCVV"><b>CVV</b></label>
-                                <input type="text" id="creditCardCVV" name="creditCardCVV" placeholder="CVV" value="<?php echo isset($creditCardCVV) ? $creditCardCVV : ""; ?>"><br>
-                            </div>
-                            <div id="upi_details" style="display: none;">
-                                <label for="upiid"><b>UPI ID</b></label>
-                                <input type="number" name="Upiid" placeholder="UPI ID" value="<?php echo isset($Upiid) ? $Upiid : ""; ?>">
-                            </div>
+                        <div id="upi_details" style="display: none;">
+                            <label for="upiid"><b>UPI ID</b></label>
+                            <input type="number" name="Upiid" placeholder="UPI ID" value="<?php echo isset($Upiid) ? $Upiid : ""; ?>">
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="btnwrappper">
-                    <button type="submit" name="submit" value="update"><b>Update</b></button>
-                    <button type="submit" name="submit" value="submit"><b>Submit</b></button>
-                    <button type="reset"><b>Cancel</b></button><br>
-                </div>
+            <div class="btnwrappper">
+                <button type="submit" name="submit" value="update"><b>Update</b></button>
+                <button type="submit" name="submit" value="submit"><b>Submit</b></button>
+                <button type="reset"><b>Cancel</b></button><br>
+            </div>
         </form>
     </div>
 
