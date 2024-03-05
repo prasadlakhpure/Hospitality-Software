@@ -15,22 +15,19 @@
     $password = "";
     $dbname = "menu";
 
-    // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
 
-    // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Get data from the request
+
     $rowId = isset($_GET['id']) ? $_GET['id'] : null;
 
     if ($rowId === null) {
         die("Invalid data sent from the client");
     }
 
-    // Fetch existing data from the database
     $selectSql = "SELECT 
         date, time, guestTitle, guestName, gender, number, address, city, pincode, idProof,
         adharcardNumber, pancardNumber, drivinglicenseNumber, passportNumber, nationality, email, 
@@ -50,27 +47,63 @@
     }
 
     $selectStmt->bind_result(
-        $date, $time, $guestTitle, $guestName, $gender, $number, $address, $city, $pincode, $idProof,
-        $adharcardNumber, $pancardNumber, $drivinglicenseNumber, $passportNumber, $nationality, $email, 
-        $raNumber, $companyName, $checkInDate, $arrivalTime, $checkOutDate, $departureTime, 
-        $adults, $children, $roomType, $roomNumber, $plan, $guestStatus, $billingInstruction, 
-        $discount, $advance, $roomCharge, $foodCharge, $cgstPercentage, $sgstPercentage, 
-        $extraCharge, $totalAmount, $paymentMode, $debitCardNumber,
-        $debitCardHolder, $debitCardExpiry, $debitCardCVV, 
-        $creditCardType, $creditCardNumber, $creditCardHolder, $creditCardExpiry,
-        $creditCardCVV, $Upiid
+        $date,
+        $time,
+        $guestTitle,
+        $guestName,
+        $gender,
+        $number,
+        $address,
+        $city,
+        $pincode,
+        $idProof,
+        $adharcardNumber,
+        $pancardNumber,
+        $drivinglicenseNumber,
+        $passportNumber,
+        $nationality,
+        $email,
+        $raNumber,
+        $companyName,
+        $checkInDate,
+        $arrivalTime,
+        $checkOutDate,
+        $departureTime,
+        $adults,
+        $children,
+        $roomType,
+        $roomNumber,
+        $plan,
+        $guestStatus,
+        $billingInstruction,
+        $discount,
+        $advance,
+        $roomCharge,
+        $foodCharge,
+        $cgstPercentage,
+        $sgstPercentage,
+        $extraCharge,
+        $totalAmount,
+        $paymentMode,
+        $debitCardNumber,
+        $debitCardHolder,
+        $debitCardExpiry,
+        $debitCardCVV,
+        $creditCardType,
+        $creditCardNumber,
+        $creditCardHolder,
+        $creditCardExpiry,
+        $creditCardCVV,
+        $Upiid
     );
 
     $selectStmt->fetch();
 
-    // Close the select statement
     $selectStmt->close();
 
-    // Include your HTML form with the fetched data
-    include('booking.html');
+    include('booking.php');
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Update data in the database
         $updateSql = "UPDATE booking SET 
             date = ?, time = ?, guestTitle = ?, guestName = ?, gender = ?, number = ?, 
             address = ?, city = ?, pincode = ?, idProof = ?, adharcardNumber = ?, 
@@ -83,9 +116,9 @@
             debitCardHolder = ?, debitCardExpiry = ?, debitCardCVV = ?, creditCardType = ?, 
             creditCardNumber = ?, creditCardHolder = ?, creditCardExpiry = ?, 
             creditCardCVV = ?, Upiid = ? WHERE id = ?";
-        
+
         $updateStmt = $conn->prepare($updateSql);
-    
+
         $updateStmt->bind_param(
             "sssssssssssssssssssssssssssssssssssssssi",
             $_POST['date'],
@@ -138,21 +171,18 @@
             $_POST['Upiid'],
             $rowId
         );
-    
+
         if (!$updateStmt->execute()) {
             die("Error updating row: " . $updateStmt->error);
         }
-    
+
         $updateStmt->close();
-        
+
         echo "Row updated successfully!";
     }
-    
+
     $conn->close();
     ?>
-
-
-
 </body>
 
 </html>

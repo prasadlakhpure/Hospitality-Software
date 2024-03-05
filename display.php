@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta name="description" content="Booking and Reservation System">
-        <title>Booking and Reservation System</title>
+        <title>Reservation System</title>
         <style>
             * {
                 box-sizing: border-box;
@@ -149,7 +149,6 @@
 
         <div class="navbar">
             <input type="date" id="datePicker" onchange="viewRecordsByDate()">
-
             <button onclick="showAllArrivals()">All Arrivals</button>
             <button onclick="showTodaysArrivals()">Today's Arrivals</button>
             <button onclick="addFunction()">Add</button>
@@ -214,7 +213,7 @@
 
 
             function addFunction() {
-                window.location.href = 'booking.html';
+                window.location.href = 'booking.php';
             }
 
             function updateFunction() {
@@ -258,7 +257,6 @@
 
             function checkinFunction() {
                 var selectedRow = document.querySelector("table tr.selected");
-
                 if (selectedRow) {
                     var rowId = selectedRow.cells[0].innerText;
 
@@ -271,7 +269,7 @@
                                 var rowData = JSON.parse(this.responseText);
 
 
-                                window.location.href = 'checkin.html?id=' + rowId + '&data=' + encodeURIComponent(JSON.stringify(rowData));
+                                window.location.href = 'checkin.php?id=' + rowId + '&data=' + encodeURIComponent(JSON.stringify(rowData));
                             } else {
                                 alert("Failed to fetch data. Please try again.");
                             }
@@ -279,7 +277,7 @@
                     };
 
 
-                    xhttp.open("GET", 'get_row_data.php?id=' + rowId, true);
+                    xhttp.open("GET", 'connect.php?id=' + rowId, true);
                     xhttp.send();
                 } else {
                     alert("Please select a row to check in.");

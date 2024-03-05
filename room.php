@@ -90,25 +90,15 @@
 
         includeContent('menu.html', 'sidebar');
 
-        function addFunction() {
-            // Add functionality code goes here
-        }
+        function addFunction() {}
 
-        function updateFunction() {
-            // Update/Modify functionality code goes here
-        }
+        function updateFunction() {}
 
-        function deleteFunction() {
-            // Delete functionality code goes here
-        }
+        function deleteFunction() {}
 
-        function showFunction() {
-            // Show functionality code goes here
-        }
+        function showFunction() {}
 
-        function closeFunction() {
-            // Close functionality code goes here
-        }
+        function closeFunction() {}
     </script>
 </body>
 

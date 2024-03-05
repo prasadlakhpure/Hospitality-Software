@@ -48,7 +48,7 @@ body {
 .inputwrapper {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
 }
 
 .bookingbx {
@@ -85,19 +85,29 @@ body {
 .checkinwrap {
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+
 }
 
+
 .checkinbx {
-    width: 30%;
-    margin-left: 2%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+
+}
+
+.firstcheckbx,.seccheckbx {
+    border-bottom: 2px solid gray;
+    padding-bottom: 10px;
 }
 
 form {
     margin-top: 10px;
 }
 
-label {
+.checkincontainer label ,
+.bookingbx label{
     display: inline-block;
     margin-bottom: 5px;
     color: #555;
@@ -150,7 +160,27 @@ select {
     width: 50%;
 }
 
+.checkincontainer {
+    width: 24%;
+    margin-left: 1%;
 
+}
 
-/* CSS FOR THE ROOM.PHP FILE IS DOWN */
+.roominbx {
+    display: flex;
+    flex-direction: row;
+    width: 30%;
+    margin-left: 2%;
+}
 
+.roominbx label {
+    width: 30%;
+}
+
+.roominbx input {
+    width: 60%;
+}
+
+#content-checkin h2 {
+    text-align: center;
+}
