@@ -6,35 +6,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Branch</title>
     <style>
+        /* .navbar {
+            width: 100%;
+            background-color: #34495e;
+            display: flex;
+            flex-wrap: wrap;
+        }
 
-   /* .roomdesc{
-    border: 1px solid;
-    width: 50%;
-    margin: 0px auto;
-    height: 500px;
-   }
-   .roomlist{
-    border: 1px solid;
-    height: 370px;
-    width: 90%;
-    margin: 0px auto;
-   } */
-   .navbar{
-    /* border: 1px solid; */
-    width: 100%;
-    background-color: #34495e;
-    display: flex;
-    flex-wrap: wrap;
-    /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr; */
+        .navbar button {
+            margin: 5px 40px;
+            border-radius: 5px;
+            background-color: #e74c3c;
+        } */
 
-   }
-   .navbar button{
-    margin: 5px 40px;
-    border-radius: 5px;
-    background-color:  #e74c3c ;
-    /* margin: 5px 30px 5px 30px; */
 
-   }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            width: 100%;
+            background-color: #34495e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .navbar button {
+            margin: 5px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #e74c3c;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        .navbar button:hover {
+            background-color: #c0392b;
+        }
+
+        #output {
+            padding: 20px;
+        }
+
+        .commontable {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+            
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button-container button:hover {
+            background-color: #3498db;
+            color: white;
+        }
     </style>
 </head>
 
@@ -44,15 +99,15 @@
         <div class="navbar">
             <div class="navbar">
                 <button onclick="roomdescriptionmaster()"><b>Room Description Master</b></button>
-                <button onclick="roomtypemaster()"><b>Room Type Master</b></button>
                 <button onclick="billinstruction()"><b>Bill Instruction</b></button>
                 <button onclick="creditcardmaster()"><b>Credit Card Master</b></button>
                 <button onclick="currencymaster()"><b>Currency Master</b></button>
-                <button onclick="categorymaster()"><b>Category Master</b></button>
                 <button onclick="companymaster()"><b>Company Master</b></button>
-                <button onclick="packagemaster()"><b>Package Master</b></button>
                 <button onclick="countrymaster()"><b>Country Master</b></button>
+                <button onclick="packagemaster()"><b>Package Master</b></button>
                 <button onclick="CGSTandSGST()"><b>CGST and SGST</b></button>
+                <!-- <button onclick="roomtypemaster()"><b>Room Type Master</b></button> -->
+                <!-- <button onclick="categorymaster()"><b>Category Master</b></button> -->
             </div>
         </div>
         <div id="output"></div>
@@ -74,186 +129,216 @@
 
         includeContent('menu.html', 'sidebar');
 
+        // function roomdescriptionmaster() {
+        //     const roomDiscriptionMaster = `
+        // <div id="roomDiscriptionMaster">
+        //     <h2><b> Room Description List</b></h2>
+        //  <div class = commontable>
+        //     <table>
+        //         <tr>
+        //             <th>Code</th>
+        //             <th>Description</th>
+        //         </tr>                
+        //     </table>
+
+        //     <div class="button-container">
+        //         <button onclick="insert()">Insert</button>
+        //         <button onclick="modify()">Modify</button>
+        //         <button onclick="delete()">Delete</button>
+        //         <button onclick="view()">View</button>
+        //         <button onclick="close()">Close</button>
+        //     </div>
+        //  </div> 
+        //  </div>           
+        // `;
+        //      document.getElementById('output').innerHTML = roomDiscriptionMaster;
+        // }   
+
+
+
+
         function roomdescriptionmaster() {
             const roomDiscriptionMaster = `
-                <div id="roomDiscriptionMaster" class="roomdesc">
-                    <h2><b> Room Discription List</b></h2>
-                  <div class="roomlist">
-                    <label for="code">Code:</label>
-                    <input type="text" id="code"> <br> 
-                    <label for="description">Description</label>
-                    <input type="text" id="description"> <br>
-                    <button onclick="insertRoomType()">Insert</button>
-                    <button onclick="modifyRoomType()">Modify</button>
-                    <button onclick="deleteRoomType()">Delete</button>
-                    <button onclick="viewRoomTypes()">View</button>
-                    <button onclick="closeFunctionality()">Close</button>
-                  </div>
+        <div id="roomDiscriptionMaster">
+            <h2><b> Room Description List</b></h2>
+            <div class="commontable">
+                <table id="roomTable">
+                    <tr>
+                        <th>Code</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+
+                <div class="button-container">
+                    <button onclick="insert()">Insert</button>
+                    <button onclick="modify()">Modify</button>
+                    <button onclick="deleteRow()">Delete</button>
+                    <button onclick="view()">View</button>
+                    <button onclick="close()">Close</button>
                 </div>
-            `;
+            </div>
+        </div>           
+    `;
             document.getElementById('output').innerHTML = roomDiscriptionMaster;
         }
 
-        const roomTypes = [];
+        function insert() {
+            const table = document.getElementById('roomTable');
 
-        function insertRoomType() {
-            const roomTypeInput = document.getElementById('roomType');
-            const newRoomType = roomTypeInput.value.trim();
+            const newRow = table.insertRow(table.rows.length);
 
-            if (newRoomType) {
-                roomTypes.push(newRoomType);
-                roomTypeInput.value = '';
-                displayOutput('Room type inserted: ' + newRoomType);
-            } else {
-                displayOutput('Please enter a room type.');
-            }
+      
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+
+            cell1.innerHTML = '<input type="text" name="code">';
+            cell2.innerHTML = '<input type="text" name="description">';
         }
 
-        function modifyRoomType() {
-            const roomTypeInput = document.getElementById('roomType');
-            const existingRoomType = roomTypeInput.value.trim();
-
-            if (existingRoomType) {
-                const index = roomTypes.indexOf(existingRoomType);
-                if (index !== -1) {
-
-                    roomTypes[index] = existingRoomType;
-                    displayOutput('Room type modified: ' + existingRoomType);
-                } else {
-                    displayOutput('Room type not found.');
-                }
-            } else {
-                displayOutput('Please enter a room type.');
-            }
-        }
-
-        function deleteRoomType() {
-            const roomTypeInput = document.getElementById('roomType');
-            const existingRoomType = roomTypeInput.value.trim();
-
-            if (existingRoomType) {
-                const index = roomTypes.indexOf(existingRoomType);
-                if (index !== -1) {
-                    roomTypes.splice(index, 1);
-                    displayOutput('Room type deleted: ' + existingRoomType);
-                } else {
-                    displayOutput('Room type not found.');
-                }
-            } else {
-                displayOutput('Please enter a room type.');
-            }
-        }
-
-        function viewRoomTypes() {
-            displayOutput('Room Types: ' + roomTypes.join(', '));
-        }
-
-        function closeFunctionality() {
-            displayOutput('Closing Room Type Master functionality.');
-
-        }
-
-        function displayOutput(message) {
-            const outputDiv = document.getElementById('output');
-            outputDiv.innerHTML = message;
-        }
-
-        function roomtypemaster() {
-            const roomTypeMaster = `
-                <div id="roomTypeMastertion">
-                    <h2><b> Room Type List</b></h2>
-                  <div class="roomlist">
-                    <label for="roomcode">Room Code:</label>
-                    <input type="text" id="roomcode"> <br> 
-                    <label for="description">Description:</label>
-                    <input type="text" id="descritption"> <br>
-                    <h3><b>Rate Information</b></h3>
-                    <label for="single">Single Room:</label>
-                    <input type="text" id=""> 
-                    <input type="text" id=""> <br>
-                    <label for="double">Double Room:</label>
-                    <input type="text" id=""> 
-                    <input type="text" id=""> <br>
-                    <label for="dulexe">Dulexe Room:</label>
-                    <input type="text" id=""> 
-                    <input type="text" id=""> <br>
-                    <label for="executive">Executive Suite:</label>
-                    <input type="text" id=""> 
-                    <input type="text" id=""> <br>
-                    <label for="presidentail"> Presidentail Suite:</label>
-                    <input type="text" id=""> 
-                    <input type="text" id=""> <br>
-                    <h3><b>Summary </b></h3>
-                    <label for="single">Single Room:</label>
-                    <input type="text" id=""> 
-                    <input type="text" id=""> <br>
-                    <label for="double">Double Room:</label>
-                    <input type="text" id=""> 
-                    <input type="text" id=""> <br>
-                    <label for="dulexe">Dulexe Room:</label>
-                    <input type="text" id=""> 
-                    <input type="text" id=""> <br>
-                    <label for="executive">Executive Suite:</label>
-                    <input type="text" id=""> 
-                    <input type="text" id=""> <br>
-                    <label for="presidentail"> Presidentail Suite:</label>
-                    <input type="text" id=""> 
-                    <input type="text" id=""> <br>                   
-                  </div>
-                </div>
-            `;
-            document.getElementById('output').innerHTML = roomTypeMaster;
-        }
 
         function billinstruction() {
             const billInstruction = `
-                <div id="billInstruction">
-                    <h2><b>Bill Instruction List</b></h2>
-                  <div class="roomlist">
-                    <label for="code">Code:</label>
-                    <input type="text" id="code"> <br> 
-                    <label for="description">Description:</label>
-                    <input type="text" id="descritption"> <br>
-                    <button onclick="insertRoomType()">Insert</button>
-                    <button onclick="modifyRoomType()">Modify</button>
-                    <button onclick="deleteRoomType()">Delete</button>
-                    <button onclick="viewRoomTypes()">View</button>
-                    <button onclick="closeFunctionality()">Close</button>
-                  </div>
+            <div id="billInstruction">
+             <h2><b>Bill Instruction List</b></h2>
+               <div class = commontable>
+                  <table>
+                    <tr>
+                     <th>Code</th>
+                     <th>Description</th>
+                    </tr>
+                  </table>
+                <div class="button-container">
+                  <button onclick="insert()">Insert</button>
+                  <button onclick="modify()">Modify</button>
+                  <button onclick="delete()">Delete</button>
+                  <button onclick="view()">View</button>
+                  <button onclick="close()">Close</button>
                 </div>
+               </div> 
+            </div>
             `;
             document.getElementById('output').innerHTML = billInstruction;
         }
 
 
         function creditcardmaster() {
-            // Define the function for Credit Card Master here
+            const creditCard = `
+        <div id="creditCard">
+            <h2><b>Credit Card List</b></h2>
+            <div class = commontable>
+            <table>
+                <tr>
+                    <th>Code</th>
+                    <th>Description</th>
+                    <th>Card Limit</th>
+                    <th>Commission</th>
+                </tr>
+                
+            </table>
+            <div class="button-container">
+                <button onclick="insert()">Insert</button>
+                <button onclick="modify()">Modify</button>
+                <button onclick="delete()">Delete</button>
+                <button onclick="view()">View</button>
+                <button onclick="close()">Close</button>
+            </div>
+         </div> 
+        </div>           
+    `;
+            document.getElementById('output').innerHTML = creditCard;
         }
+
 
         function currencymaster() {
-            // Define the function for Currency Master here
-        }
-
-        function categorymaster() {
-            // Define the function for Category Master here
+            const currency = `
+        <div id="currency">
+            <h2><b>Currency List</b></h2>
+            <div class = commontable>
+            <table>
+                <tr>
+                    <th>Country Name</th>
+                    <th>Currency of Country</th>
+                </tr>
+                
+            </table>
+            <div class="button-container">
+                <button onclick="insert()">Insert</button>
+                <button onclick="modify()">Modify</button>
+                <button onclick="delete()">Delete</button>
+                <button onclick="view()">View</button>
+                <button onclick="close()">Close</button>
+            </div>
+         </div> 
+        </div>           
+    `;
+            document.getElementById('output').innerHTML = currency;
         }
 
         function companymaster() {
-            // Define the function for Company Master here
+            const company = `
+        <div id="company">
+            <h2><b>Company List</b></h2>
+            <div class = commontable>
+            <table>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Company Code</th>
+                    <th>City</th>                    
+                </tr>
+                
+            </table>
+            <div class="button-container">
+                <button onclick="insert()">Insert</button>
+                <button onclick="modify()">Modify</button>
+                <button onclick="delete()">Delete</button>
+                <button onclick="view()">View</button>
+                <button onclick="close()">Close</button>
+            </div>
+         </div> 
+        </div>           
+    `;
+            document.getElementById('output').innerHTML = company;
+
         }
 
-        function packagemaster() {
-            // Define the function for Package Master here
-        }
+
 
         function countrymaster() {
-            // Define the function for Country Master here
+            const country = `
+        <div id="country">
+            <h2><b>Country List</b></h2>
+            <div class = commontable>
+            <table>
+                <tr>
+                    <th>Country Code</th>
+                    <th>Name of Country</th>
+                </tr>
+                
+            </table>
+            <div class="button-container">
+                <button onclick="insert()">Insert</button>
+                <button onclick="modify()">Modify</button>
+                <button onclick="delete()">Delete</button>
+                <button onclick="view()">View</button>
+                <button onclick="close()">Close</button>
+            </div>
+         </div> 
+        </div>           
+    `;
+            document.getElementById('output').innerHTML = country;
         }
 
-        function CGSTandSGST() {
-            // Define the function for CGST and SGST here
-        }
+        function packagemaster() {}
+
+        function CGSTandSGST() {}
+        // function roomtypemaster() {}
+        // function categorymaster() {}
     </script>
+
 </body>
 
-</html>
+</html>   
