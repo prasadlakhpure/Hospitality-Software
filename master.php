@@ -332,9 +332,13 @@
             document.getElementById('output').innerHTML = country;
         }
 
-        function packagemaster() {}
+        function packagemaster() {
+            
+        }
 
-        function CGSTandSGST() {}
+        function CGSTandSGST() {
+            
+        }
         // function roomtypemaster() {}
         // function categorymaster() {}
     </script>
