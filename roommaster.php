@@ -1,3 +1,4 @@
+
 <?php
 $servername = "localhost";
 $username = "root";
@@ -11,18 +12,24 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $roomId = isset($_POST['roomId']) ? $_POST['roomId'] : "";
     $roomcode = $_POST['roomCode'];
     $roomdescription = $_POST['roomDescription'];
-    $sql = "";
 
-    if (isset($_POST['submit']) && $_POST['submit'] === 'submit') {
-        // Insertion logic
-        $sql = "INSERT INTO roommaster (RoomCode, RoomDescription)
-        VALUES ('$roomcode', '$roomdescription')";
-    } elseif (isset($_POST['modify']) && $_POST['modify'] === 'modify') {
-        // Modification logic
+    if (isset($_POST['modify']) && $_POST['modify'] === 'modify') {
         $roomId = $_POST['roomId'];
-        $sql = "UPDATE roommaster SET RoomCode='$roomcode', RoomDescription='$roomdescription' WHERE RoomCode='$roomId'";
+        $fetch_id_sql = "SELECT * FROM roommaster";
+        $result = $conn->query($fetch_id_sql);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $roomId = $row['roomId'];
+            $sql = "UPDATE roommaster SET RoomCode='$roomcode', RoomDescription='$roomdescription' WHERE RoomID='$roomId'";
+        } else {
+            echo "ID not found in the database.";
+            exit;
+        }
+    } elseif (isset($_POST['submit']) && $_POST['submit'] == 'submit') {
+        $sql = "INSERT INTO roommaster (RoomCode, RoomDescription) VALUES ('$roomcode', '$roomdescription')";
     }
 
     if (!empty($sql)) {

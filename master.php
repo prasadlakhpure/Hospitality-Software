@@ -162,22 +162,26 @@
                     die("Connection failed: " . $conn->connect_error);
                 }
 
-                $sql = "SELECT RoomCode, RoomDescription FROM roommaster";
+                $sql = "SELECT RoomID, RoomCode, RoomDescription FROM roommaster";
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
                     echo "<table>
                         <tr>
+                            <th>Room ID</th>
                             <th>Room Code</th>
                             <th>Room Description</th>
+                          
                         </tr>";
 
                     while ($row = $result->fetch_assoc()) {
-                        echo "<tr data-roomid='{$row['RoomCode']}'>
-                            <td>{$row['RoomCode']}</td>
-                            <td>{$row['RoomDescription']}</td>
-                        </tr>";
+                        echo "<tr data-roomid='{$row['RoomCode']}' onclick='selectRow(\"{$row['RoomCode']}\")'>
+                                <td>{$row['RoomID']}</td>
+                                <td>{$row['RoomCode']}</td>
+                                <td>{$row['RoomDescription']}</td>
+                            </tr>";
                     }
+
 
                     echo "</table>";
                 } else {
@@ -210,8 +214,34 @@
               </form>
             </div>
         </div>
+
+        <div id="modifyPopup" class="popup">
+            <div class="popup-content">
+              <form>
+                <label for="modifyRoomCode">Room Code:</label>
+                <input type="text" id="modifyRoomCode" name="modifyRoomCode"> <br>
+
+                <label for="modifyRoomDescription">Room Description:</label>
+                <input type="text" id="modifyRoomDescription" name="modifyRoomDescription"> <br>
+
+                <button onclick="update()" name="submit" value="submit">Update</button>
+                <button onclick="closeModifyPopup()">Cancel</button>
+              </form>
+            </div>
+        </div>
     `;
             document.getElementById('output').innerHTML = roomDiscriptionMaster;
+        }
+
+        function selectRow(roomCode) {
+            var rows = document.querySelectorAll("table tr");
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].classList.remove("selected");
+            }
+
+            var selectedRow = document.querySelector("tr[data-roomid='" + roomCode + "']");
+            selectedRow.classList.add("selected");
+
         }
 
         function showInsertPopup() {
@@ -226,63 +256,121 @@
             closeInsertPopup();
         }
 
-        function modify() {
-            // Find the selected row
-            const selectedRow = document.querySelector("#roomDiscriptionMaster table tr.selected-row");
+
+        function deleteRow() {
+            var table = document.querySelector("table");
+            var selectedRow = table.querySelector(".selected");
 
             if (selectedRow) {
-                // Get the room ID from the selected row
-                const roomId = selectedRow.getAttribute("data-roomid");
+                var rowId = selectedRow.cells[1].innerText;
 
-                // Fetch the room details from the server and pre-fill the form
-                fetch(`get_room_details.php?roomId=${roomId}`)
-                    .then(response => response.json())
-                    .then(roomDetails => {
-                        if (roomDetails) {
-                            // Populate the form fields with existing data
-                            document.getElementById('roomCode').value = roomDetails.RoomCode;
-                            document.getElementById('roomDescription').value = roomDetails.RoomDescription;
-
-                            // Show the insert popup for modification
-                            showInsertPopup();
-
-                            // Change the submit button behavior to handle modification
-                            document.querySelector('#insertPopup button[name="submit"]').onclick = function() {
-                                // Update the room details on the server
-                                fetch(`modify_room  .php?roomId=${roomId}`, {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                        },
-                                        body: JSON.stringify({
-                                            roomCode: document.getElementById('roomCode').value,
-                                            roomDescription: document.getElementById('roomDescription').value,
-                                        }),
-                                    })
-                                    .then(response => response.json())
-                                    .then(responseData => {
-                                        // Handle the response as needed
-                                        console.log(responseData);
-
-                                        // Close the insert popup after modification
-                                        closeInsertPopup();
-                                    })
-                                    .catch(error => {
-                                        console.error('Error modifying room:', error);
-                                    });
-                            };
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            selectedRow.remove();
                         } else {
-                            console.error('Error fetching room details.');
+                            alert("Failed to delete the row. Please try again.");
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching room details:', error);
-                    });
+                    }
+                };
+
+                xhttp.open("POST", "roomdelete.php", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("roomId=" + encodeURIComponent(rowId));
             } else {
-                alert('Please select a room to modify.');
+                alert("Please select a row to delete.");
             }
         }
 
+        function modify() {
+            var table = document.querySelector("table");
+            var selectedRow = table.querySelector(".selected");
+
+            if (selectedRow) {
+                // Get data from the selected row
+                var roomCode = selectedRow.cells[1].innerText;
+                var roomDescription = selectedRow.cells[2].innerText;
+
+                // Populate the modifyPopup form with the selected row data
+                document.getElementById('modifyRoomCode').value = roomCode;
+                document.getElementById('modifyRoomDescription').value = roomDescription;
+
+                // Display the modifyPopup
+                document.getElementById('modifyPopup').style.display = 'block';
+            } else {
+                alert("Please select a row to modify.");
+            }
+        }
+
+
+        function update() {
+            // Get values from the modifyPopup form
+            var roomCode = document.getElementById('modifyRoomCode').value;
+            var roomDescription = document.getElementById('modifyRoomDescription').value;
+
+            // Update the selected row with the new data
+            var selectedRow = document.querySelector("tr[data-roomid='" + roomCode + "']");
+            selectedRow.cells[2].innerText = roomDescription;
+
+            // Close the modifyPopup
+            closeModifyPopup();
+
+            // Make an AJAX request to update data in the database
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        // Check the response text for success or error message
+                        if (this.responseText.trim() === "Update successful") {
+                            alert("Update successful");
+                        } else {
+                            alert("Failed to update the data. Please try again. Error: " + this.responseText);
+                        }
+                    } else {
+                        alert("Failed to update the data. Please try again. Status: " + this.status);
+                    }
+                }
+            };
+
+            xhttp.open("POST", "roomupdate.php", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send("roomCode=" + encodeURIComponent(roomCode) + "&roomDescription=" + encodeURIComponent(roomDescription));
+        }
+
+
+        function closeModifyPopup() {
+            document.getElementById('modifyRoomCode').value = '';
+            document.getElementById('modifyRoomDescription').value = '';
+            document.getElementById('modifyPopup').style.display = 'none';
+        }
+
+        function view() {
+            var table = document.querySelector("table");
+            var selectedRow = table.querySelector(".selected");
+
+            if (selectedRow) {
+                // Get data from the selected row
+                var roomID = selectedRow.cells[0].innerText;
+                var roomCode = selectedRow.cells[1].innerText;
+                var roomDescription = selectedRow.cells[2].innerText;
+
+                // Display the details in a popup or alert
+                var details = "Room ID: " + roomID + "\nRoom Code: " + roomCode + "\nRoom Description: " + roomDescription;
+                alert(details);
+            } else {
+                alert("Please select a row to view details.");
+            }
+        }
+
+        function close() {
+            var table = document.querySelector("table");
+            var rows = table.querySelectorAll("tr");
+
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].classList.remove("selected");
+            }
+        }
 
 
         function billinstruction() {
