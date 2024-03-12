@@ -206,7 +206,7 @@
                 <label for="roomCode">Room Code:</label>
                 <input type="text" id="roomCode" name="roomCode"> <br>
 
-                <label for="roomDescription">Room Description:</label>
+                <label for="roomDescription">Room Description</label>
                 <input type="text" id="roomDescription" name="roomDescription"> <br>
 
                 <button onclick="insert()" name="submit" value="submit">Submit</button>
@@ -218,10 +218,10 @@
         <div id="modifyPopup" class="popup">
             <div class="popup-content">
               <form>
-                <label for="modifyRoomCode">Room Code:</label>
+                <label for="modifyRoomCode">Room Code</label>
                 <input type="text" id="modifyRoomCode" name="modifyRoomCode"> <br>
 
-                <label for="modifyRoomDescription">Room Description:</label>
+                <label for="modifyRoomDescription">Room Description</label>
                 <input type="text" id="modifyRoomDescription" name="modifyRoomDescription"> <br>
 
                 <button onclick="update()" name="submit" value="submit">Update</button>
@@ -288,15 +288,15 @@
             var selectedRow = table.querySelector(".selected");
 
             if (selectedRow) {
-               
+
                 var roomCode = selectedRow.cells[1].innerText;
                 var roomDescription = selectedRow.cells[2].innerText;
 
-               
+
                 document.getElementById('modifyRoomCode').value = roomCode;
                 document.getElementById('modifyRoomDescription').value = roomDescription;
 
-              
+
                 document.getElementById('modifyPopup').style.display = 'block';
             } else {
                 alert("Please select a row to modify.");
@@ -305,23 +305,23 @@
 
 
         function update() {
-           
+
             var roomCode = document.getElementById('modifyRoomCode').value;
             var roomDescription = document.getElementById('modifyRoomDescription').value;
 
-           
+
             var selectedRow = document.querySelector("tr[data-roomid='" + roomCode + "']");
             selectedRow.cells[2].innerText = roomDescription;
 
-          
+
             closeModifyPopup();
 
-          
+
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4) {
                     if (this.status == 200) {
-                      
+
                         if (this.responseText.trim() === "Update successful") {
                             alert("Update successful");
                         } else {
@@ -350,12 +350,12 @@
             var selectedRow = table.querySelector(".selected");
 
             if (selectedRow) {
-           
+
                 var roomID = selectedRow.cells[0].innerText;
                 var roomCode = selectedRow.cells[1].innerText;
                 var roomDescription = selectedRow.cells[2].innerText;
 
-               
+
                 var details = "Room ID: " + roomID + "\nRoom Code: " + roomCode + "\nRoom Description: " + roomDescription;
                 alert(details);
             } else {
@@ -375,27 +375,87 @@
 
         function billinstruction() {
             const billInstruction = `
-            <div id="billInstruction">
-             <h2><b>Bill Instruction List</b></h2>
-               <div class = commontable>
-                  <table>
-                    <tr>
-                     <th>Code</th>
-                     <th>Description</th>
-                    </tr>
-                  </table>
+        <div id="billInstruction">
+            <h2><b>Bill Instruction List</b></h2>
+            <div class="commontable">
+                <?php
+                $servername = "localhost";
+                $username = "root";
+                $password = "";
+                $dbname = "menu";
+
+                $conn = new mysqli($servername, $username, $password, $dbname);
+
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+
+                $sql = "SELECT BillCode, BillDescription FROM roommaster";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    echo "<table>
+                        <tr>
+                            <th>Bill Code</th>
+                            <th>Bill Description</th>
+                        </tr>";
+
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr data-billid='{$row['BillCode']}' onclick='selectRow(\"{$row['BillCode']}\")'>
+                                <td>{$row['BillCode']}</td>
+                                <td>{$row['BillDescription']}</td>
+                            </tr>";
+                    }
+
+                    echo "</table>";
+                } else {
+                    echo "No records found";
+                }
+
+                $conn->close();
+                ?>
                 <div class="button-container">
-                  <button onclick="insert()">Insert</button>
-                  <button onclick="modify()">Modify</button>
-                  <button onclick="delete()">Delete</button>
-                  <button onclick="view()">View</button>
-                  <button onclick="close()">Close</button>
+                    <button onclick="insert()">Insert</button>
+                    <button onclick="modify()">Modify</button>
+                    <button onclick="delete()">Delete</button>
+                    <button onclick="view()">View</button>
+                    <button onclick="close()">Close</button>
                 </div>
-               </div> 
             </div>
-            `;
+        </div>
+        `;
             document.getElementById('output').innerHTML = billInstruction;
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         function creditcardmaster() {
