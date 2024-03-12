@@ -203,10 +203,10 @@
         <div id="insertPopup" class="popup">
             <div class="popup-content">
               <form action="roommaster.php" method="post">
-                <label for="roomCode">Room Code:</label>
+                <label for="roomCode">Room Code</label>
                 <input type="text" id="roomCode" name="roomCode"> <br>
 
-                <label for="roomDescription">Room Description:</label>
+                <label for="roomDescription">Room Description</label>
                 <input type="text" id="roomDescription" name="roomDescription"> <br>
 
                 <button onclick="insert()" name="submit" value="submit">Submit</button>
@@ -218,10 +218,10 @@
         <div id="modifyPopup" class="popup">
             <div class="popup-content">
               <form>
-                <label for="modifyRoomCode">Room Code:</label>
+                <label for="modifyRoomCode">Room Code</label>
                 <input type="text" id="modifyRoomCode" name="modifyRoomCode"> <br>
 
-                <label for="modifyRoomDescription">Room Description:</label>
+                <label for="modifyRoomDescription">Room Description</label>
                 <input type="text" id="modifyRoomDescription" name="modifyRoomDescription"> <br>
 
                 <button onclick="update()" name="submit" value="submit">Update</button>
@@ -373,12 +373,46 @@
             <div id="billInstruction">
              <h2><b>Bill Instruction List</b></h2>
                <div class = commontable>
-                  <table>
-                    <tr>
-                     <th>Code</th>
-                     <th>Description</th>
-                    </tr>
-                  </table>
+               <?php
+                $servername = "localhost";
+                $username = "root";
+                $password = "";
+                $dbname = "menu";
+
+                $conn = new mysqli($servername, $username, $password, $dbname);
+
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+
+                $sql = "SELECT RoomID, RoomCode, RoomDescription FROM roommaster";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    echo "<table>
+                        <tr>
+                            <th>Room ID</th>
+                            <th>Room Code</th>
+                            <th>Room Description</th>
+                          
+                        </tr>";
+
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr data-roomid='{$row['RoomCode']}' onclick='selectRow(\"{$row['RoomCode']}\")'>
+                                <td>{$row['RoomID']}</td>
+                                <td>{$row['RoomCode']}</td>
+                                <td>{$row['RoomDescription']}</td>
+                            </tr>";
+                    }
+
+
+                    echo "</table>";
+                } else {
+                    echo "No records found";
+                }
+
+                $conn->close();
+                ?>
                 <div class="button-container">
                   <button onclick="insert()">Insert</button>
                   <button onclick="modify()">Modify</button>
