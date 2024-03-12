@@ -260,14 +260,12 @@
                 if (selectedRow) {
                     var rowId = selectedRow.cells[0].innerText;
 
-
                     var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4) {
                             if (this.status == 200) {
 
                                 var rowData = JSON.parse(this.responseText);
-
 
                                 window.location.href = 'checkin.php?id=' + rowId + '&data=' + encodeURIComponent(JSON.stringify(rowData));
                             } else {
@@ -276,8 +274,7 @@
                         }
                     };
 
-
-                    xhttp.open("GET", 'connect.php?id=' + rowId, true);
+                    xhttp.open("POST", 'update.php?id=' + rowId, true);
                     xhttp.send();
                 } else {
                     alert("Please select a row to check in.");

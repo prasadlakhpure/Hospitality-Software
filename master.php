@@ -288,15 +288,14 @@
             var selectedRow = table.querySelector(".selected");
 
             if (selectedRow) {
-                // Get data from the selected row
+        
                 var roomCode = selectedRow.cells[1].innerText;
                 var roomDescription = selectedRow.cells[2].innerText;
 
-                // Populate the modifyPopup form with the selected row data
+             
                 document.getElementById('modifyRoomCode').value = roomCode;
                 document.getElementById('modifyRoomDescription').value = roomDescription;
 
-                // Display the modifyPopup
                 document.getElementById('modifyPopup').style.display = 'block';
             } else {
                 alert("Please select a row to modify.");
@@ -305,23 +304,20 @@
 
 
         function update() {
-            // Get values from the modifyPopup form
+       
             var roomCode = document.getElementById('modifyRoomCode').value;
             var roomDescription = document.getElementById('modifyRoomDescription').value;
 
-            // Update the selected row with the new data
             var selectedRow = document.querySelector("tr[data-roomid='" + roomCode + "']");
             selectedRow.cells[2].innerText = roomDescription;
-
-            // Close the modifyPopup
+            
             closeModifyPopup();
 
-            // Make an AJAX request to update data in the database
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4) {
                     if (this.status == 200) {
-                        // Check the response text for success or error message
+                        
                         if (this.responseText.trim() === "Update successful") {
                             alert("Update successful");
                         } else {
@@ -350,12 +346,11 @@
             var selectedRow = table.querySelector(".selected");
 
             if (selectedRow) {
-                // Get data from the selected row
+           
                 var roomID = selectedRow.cells[0].innerText;
                 var roomCode = selectedRow.cells[1].innerText;
                 var roomDescription = selectedRow.cells[2].innerText;
 
-                // Display the details in a popup or alert
                 var details = "Room ID: " + roomID + "\nRoom Code: " + roomCode + "\nRoom Description: " + roomDescription;
                 alert(details);
             } else {
