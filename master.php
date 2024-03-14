@@ -431,7 +431,7 @@
                      <label for="billDescription">Bill Description</label>
                      <input type="text" id="billDescription" name="billDescription"> <br>
 
-                    <button type="button" onclick="insertBill()">Submit</button>
+                    <button type="submit" name="submit">Submit</button>
                     <button type="button" onclick="closeInsertBillPopup()">Cancel</button>
                 </form>
             </div>
@@ -439,7 +439,7 @@
 
         <div id="modifyBillPopup" class="popup">
             <div class="popup-content">
-                <form>
+                <form action="billmaster.php" method="post">
                      <label for="modifyBillID">Bill ID</label>
                      <input type="number" id="modifyBillID" name="modifyBillID"> <br>
 
@@ -448,7 +448,7 @@
 
                      <label for="modifyBillDescription">Bill Description</label>
                      <input type="text" id="modifyBillDescription" name="modifyBillDescription"> <br>
-                    <button type="button" onclick="updateBill()">Update</button>
+                    <button type="submit" name="modify" value="modify">Update</button>
                     <button type="button" onclick="closeModifyBillPopup()">Cancel</button>
                 </form>
             </div>
@@ -457,7 +457,7 @@
             document.getElementById('output').innerHTML = billInstruction;
         }
 
-        function selectBillRow(billCode, billID) {
+        function selectRow(billCode, billID) {
             var rows = document.querySelectorAll("table tr");
             for (var i = 0; i < rows.length; i++) {
                 rows[i].classList.remove("selected");
@@ -477,18 +477,12 @@
             document.getElementById('insertBillPopup').style.display = 'none';
         }
 
-        function insertBill() {
-            closeInsertBillPopup();
-        }
-
         function showModifyBillPopup() {
-            var table = document.querySelector("table");
-            var selectedRow = table.querySelector(".selected");
-
+            var selectedRow = document.querySelector("table tr.selected");
             if (selectedRow) {
-                var billCode = selectedRow.cells[1].innerText;
-                var billDescription = selectedRow.cells[2].innerText;
-                var billID = selectedRow.cells[0].innerText;
+                var billID = selectedRow.getAttribute('data-billid');
+                var billCode = selectedRow.getAttribute('data-billcode');
+                var billDescription = selectedRow.cells[2].innerHTML;
 
                 document.getElementById('modifyBillID').value = billID;
                 document.getElementById('modifyBillCode').value = billCode;
@@ -496,53 +490,20 @@
 
                 document.getElementById('modifyBillPopup').style.display = 'block';
             } else {
-                alert("Please select a row to modify.");
+                alert('Please select a bill to modify.');
             }
         }
 
-        function updateBill() {
-            var billID = document.getElementById('modifyBillID').value;
-            var billCode = document.getElementById('modifyBillCode').value;
-            var billDescription = document.getElementById('modifyBillDescription').value;
-
-            var selectedRow = document.querySelector("tr[data-billid='" + billID + "']");
-            selectedRow.cells[2].innerText = billDescription;
-
-            closeModifyBillPopup();
-
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4) {
-                    if (this.status == 200) {
-                        if (this.responseText.trim() === "Update successful") {
-                            alert("Update successful");
-                        } else {
-                            alert("Failed to update the data. Please try again. Error: " + this.responseText);
-                        }
-                    } else {
-                        alert("Failed to update the data. Please try again. Status: " + this.status);
-                    }
-                }
-            };
-
-            xhttp.open("POST", "billupdate.php", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("billID=" + encodeURIComponent(billID) + "&billCode=" + encodeURIComponent(billCode) + "&billDescription=" + encodeURIComponent(billDescription));
-        }
-
         function closeModifyBillPopup() {
-            document.getElementById('modifyBillID').value = '';
-            document.getElementById('modifyBillCode').value = '';
-            document.getElementById('modifyBillDescription').value = '';
             document.getElementById('modifyBillPopup').style.display = 'none';
         }
 
         function deleteBillRow() {
-            var table = document.querySelector("table");
-            var selectedRow = table.querySelector(".selected");
+            var table = document.querySelector("table"); 
+            var selectedRow = table.querySelector(".selected"); 
 
             if (selectedRow) {
-                var billID = selectedRow.cells[0].innerText;
+                var billID = selectedRow.cells[0].innerText; 
 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
@@ -555,59 +516,13 @@
                     }
                 };
 
-                xhttp.open("POST", "billdelete.php", true);
+                xhttp.open("POST", "billdelete.php", true); 
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send("billId=" + encodeURIComponent(billID));
+                xhttp.send("billId=" + encodeURIComponent(billID)); 
             } else {
                 alert("Please select a row to delete.");
             }
         }
-
-        function viewBill() {
-            var table = document.querySelector("table");
-            var selectedRow = table.querySelector(".selected");
-
-            if (selectedRow) {
-                var billID = selectedRow.cells[0].innerText;
-                var billCode = selectedRow.cells[1].innerText;
-                var billDescription = selectedRow.cells[2].innerText;
-
-                var details = "Bill ID: " + billID + "\nBill Code: " + billCode + "\nBill Description: " + billDescription;
-                alert(details);
-            } else {
-                alert("Please select a row to view details.");
-            }
-        }
-
-        function closeBill() {}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
