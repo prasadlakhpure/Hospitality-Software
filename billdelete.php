@@ -1,3 +1,4 @@
+
 <?php
 $servername = "localhost";
 $username = "root";
@@ -11,15 +12,15 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $roomId = isset($_POST['roomId']) ? $_POST['roomId'] : $_POST['roomID'];
+    $billId = isset($_POST['billId']) ? $_POST['billId'] : $_POST['billID'];
 
-    $sql = "DELETE FROM roommaster WHERE RoomID='$roomId'";
+    $sql = "DELETE FROM billmaster WHERE BillID='$billId'";
 
     if (!empty($sql)) {
         if ($conn->query($sql) === TRUE) {
             echo "Delete successful";
 
-            $deleteSql = "DELETE FROM your_other_table WHERE RoomID='$roomId'";
+            $deleteSql = "DELETE FROM your_other_table WHERE BillID='$billId'";
             if ($conn->query($deleteSql) === TRUE) {
                 echo "Record deleted from the database";
             } else {

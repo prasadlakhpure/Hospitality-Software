@@ -1,3 +1,4 @@
+
 <?php
 $servername = "localhost";
 $username = "root";
@@ -11,11 +12,11 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $roomId = isset($_POST['roomId']) ? $_POST['roomId'] : $_POST['roomID'];
-    $roomcode = $_POST['roomCode'];
-    $roomdescription = $_POST['roomDescription'];
+    $billId = isset($_POST['billId']) ? $_POST['billId'] : $_POST['billID'];
+    $billCode = $_POST['billCode'];
+    $billDescription = $_POST['billDescription'];
 
-    $sql = "UPDATE roommaster SET RoomCode='$roomcode', RoomDescription='$roomdescription' WHERE RoomID='$roomId'";
+    $sql = "UPDATE billmaster SET BillCode='$billCode', BillDescription='$billDescription' WHERE BillID='$billId'";
 
     if (!empty($sql)) {
         if ($conn->query($sql) === TRUE) {

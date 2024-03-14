@@ -171,17 +171,15 @@
                             <th>Room ID</th>
                             <th>Room Code</th>
                             <th>Room Description</th>
-                          
                         </tr>";
 
                     while ($row = $result->fetch_assoc()) {
-                        echo "<tr data-roomid='{$row['RoomCode']}' onclick='selectRow(\"{$row['RoomCode']}\")'>
-                                <td>{$row['RoomID']}</td>
-                                <td>{$row['RoomCode']}</td>
-                                <td>{$row['RoomDescription']}</td>
-                            </tr>";
+                        echo "<tr data-roomid='{$row['RoomID']}' data-roomcode='{$row['RoomCode']}' onclick='selectRow(\"{$row['RoomCode']}\", \"{$row['RoomID']}\")'>
+                                    <td>{$row['RoomID']}</td>
+                                    <td>{$row['RoomCode']}</td>
+                                    <td>{$row['RoomDescription']}</td>
+                                </tr>";
                     }
-
 
                     echo "</table>";
                 } else {
@@ -192,7 +190,7 @@
                 ?>
                 <div class="button-container">
                     <button onclick="showInsertPopup()">Insert</button>
-                    <button onclick="modify()">Modify</button>
+                    <button onclick="showModifyPopup()">Modify</button>
                     <button onclick="deleteRow()">Delete</button>
                     <button onclick="view()">View</button>
                     <button onclick="close()">Close</button>
@@ -203,7 +201,10 @@
         <div id="insertPopup" class="popup">
             <div class="popup-content">
               <form action="roommaster.php" method="post">
-                <label for="roomCode">Room Code:</label>
+                <label for="roomID">Room ID</label>
+                <input type="text" id="roomID" name="roomID"> <br>
+
+                <label for="roomCode">Room Code</label>
                 <input type="text" id="roomCode" name="roomCode"> <br>
 
                 <label for="roomDescription">Room Description</label>
@@ -216,32 +217,36 @@
         </div>
 
         <div id="modifyPopup" class="popup">
-            <div class="popup-content">
-              <form>
-                <label for="modifyRoomCode">Room Code</label>
-                <input type="text" id="modifyRoomCode" name="modifyRoomCode"> <br>
+           <div class="popup-content">
+             <form>
+              <label for="modifyRoomID">Room ID</label>
+              <input type="number" id="modifyRoomID" name="modifyRoomId"> <br>
 
-                <label for="modifyRoomDescription">Room Description</label>
-                <input type="text" id="modifyRoomDescription" name="modifyRoomDescription"> <br>
+              <label for="modifyRoomCode">Room Code</label>
+              <input type="text" id="modifyRoomCode" name="modifyRoomCode"> <br>
 
-                <button onclick="update()" name="submit" value="submit">Update</button>
-                <button onclick="closeModifyPopup()">Cancel</button>
-              </form>
-            </div>
+              <label for="modifyRoomDescription">Room Description</label>
+              <input type="text" id="modifyRoomDescription" name="modifyRoomDescription"> <br>
+
+              <button onclick="update()" name="submit" value="submit">Update</button>
+              <button onclick="closeModifyPopup()">Cancel</button>
+             </form>
+           </div>
         </div>
     `;
             document.getElementById('output').innerHTML = roomDiscriptionMaster;
         }
 
-        function selectRow(roomCode) {
+        function selectRow(roomCode, roomID) {
             var rows = document.querySelectorAll("table tr");
             for (var i = 0; i < rows.length; i++) {
                 rows[i].classList.remove("selected");
             }
 
-            var selectedRow = document.querySelector("tr[data-roomid='" + roomCode + "']");
-            selectedRow.classList.add("selected");
-
+            var selectedRow = document.querySelector("tr[data-roomid='" + roomID + "']");
+            if (selectedRow) {
+                selectedRow.classList.add("selected");
+            }
         }
 
         function showInsertPopup() {
@@ -256,13 +261,68 @@
             closeInsertPopup();
         }
 
+        function showModifyPopup() {
+            var table = document.querySelector("table");
+            var selectedRow = table.querySelector(".selected");
+
+            if (selectedRow) {
+                var roomCode = selectedRow.cells[1].innerText;
+                var roomDescription = selectedRow.cells[2].innerText;
+                var roomID = selectedRow.cells[0].innerText;
+
+                document.getElementById('modifyRoomID').value = roomID;
+                document.getElementById('modifyRoomCode').value = roomCode;
+                document.getElementById('modifyRoomDescription').value = roomDescription;
+
+                document.getElementById('modifyPopup').style.display = 'block';
+            } else {
+                alert("Please select a row to modify.");
+            }
+        }
+
+        function update() {
+            var roomID = document.getElementById('modifyRoomID').value;
+            var roomCode = document.getElementById('modifyRoomCode').value;
+            var roomDescription = document.getElementById('modifyRoomDescription').value;
+
+            var selectedRow = document.querySelector("tr[data-roomid='" + roomID + "']");
+            selectedRow.cells[2].innerText = roomDescription;
+
+            closeModifyPopup();
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        if (this.responseText.trim() === "Update successful") {
+                            alert("Update successful");
+                        } else {
+                            alert("Failed to update the data. Please try again. Error: " + this.responseText);
+                        }
+                    } else {
+                        alert("Failed to update the data. Please try again. Status: " + this.status);
+                    }
+                }
+            };
+
+            xhttp.open("POST", "roomupdate.php", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send("roomID=" + encodeURIComponent(roomID) + "&roomCode=" + encodeURIComponent(roomCode) + "&roomDescription=" + encodeURIComponent(roomDescription));
+        }
+
+        function closeModifyPopup() {
+            document.getElementById('modifyRoomID').value = '';
+            document.getElementById('modifyRoomCode').value = '';
+            document.getElementById('modifyRoomDescription').value = '';
+            document.getElementById('modifyPopup').style.display = 'none';
+        }
 
         function deleteRow() {
             var table = document.querySelector("table");
             var selectedRow = table.querySelector(".selected");
 
             if (selectedRow) {
-                var rowId = selectedRow.cells[1].innerText;
+                var roomID = selectedRow.cells[0].innerText;
 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
@@ -277,51 +337,183 @@
 
                 xhttp.open("POST", "roomdelete.php", true);
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send("roomId=" + encodeURIComponent(rowId));
+                xhttp.send("roomId=" + encodeURIComponent(roomID));
             } else {
                 alert("Please select a row to delete.");
             }
         }
 
-        function modify() {
+        function view() {
             var table = document.querySelector("table");
             var selectedRow = table.querySelector(".selected");
 
             if (selectedRow) {
-
+                var roomID = selectedRow.cells[0].innerText;
                 var roomCode = selectedRow.cells[1].innerText;
                 var roomDescription = selectedRow.cells[2].innerText;
 
+                var details = "Room ID: " + roomID + "\nRoom Code: " + roomCode + "\nRoom Description: " + roomDescription;
+                alert(details);
+            } else {
+                alert("Please select a row to view details.");
+            }
+        }
 
-                document.getElementById('modifyRoomCode').value = roomCode;
-                document.getElementById('modifyRoomDescription').value = roomDescription;
+        function close() {
+            window.location.href = '';
+        }
 
 
-                document.getElementById('modifyPopup').style.display = 'block';
+
+        function billinstruction() {
+            const billInstruction = `
+        <div id="billInstruction">
+            <h2><b>Bill Instruction List</b></h2>
+                <div class="commontable">
+                    <?php
+                    $servername = "localhost";
+                    $username = "root";
+                    $password = "";
+                    $dbname = "menu";
+
+                    $conn = new mysqli($servername, $username, $password, $dbname);
+
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+
+                    $sql = "SELECT BillID, BillCode, BillDescription FROM billmaster";
+                    $result = $conn->query($sql);
+
+                    if ($result->num_rows > 0) {
+                        echo "<table>
+                        <tr>
+                            <th>Bill ID</th>
+                            <th>Bill Code</th>
+                            <th>Bill Description</th>
+                        </tr>";
+
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr data-billid='{$row['BillID']}' data-billcode='{$row['BillCode']}' onclick='selectRow(\"{$row['BillCode']}\", \"{$row['BillID']}\")'>
+                                <td>{$row['BillID']}</td>
+                                <td>{$row['BillCode']}</td>
+                                <td>{$row['BillDescription']}</td>
+                            </tr>";
+                        }
+
+                        echo "</table>";
+                    } else {
+                        echo "No records found";
+                    }
+
+                    $conn->close();
+                    ?>
+
+                    <div class="button-container">
+                        <button onclick="showInsertBillPopup()">Insert</button>
+                        <button onclick="showModifyBillPopup()">Modify</button>
+                        <button onclick="deleteBillRow()">Delete</button>
+                        <button onclick="viewBill()">View</button>
+                        <button onclick="closeBill()">Close</button>
+                    </div>
+                </div>
+        </div>
+
+        <div id="insertBillPopup" class="popup">
+            <div class="popup-content">
+                <form action="billmaster.php" method="post">
+                     <label for="billID">Bill ID</label>
+                     <input type="text" id="billID" name="billID"> <br>
+
+                     <label for="billCode">Bill Code</label>
+                     <input type="text" id="billCode" name="billCode"> <br>
+
+                     <label for="billDescription">Bill Description</label>
+                     <input type="text" id="billDescription" name="billDescription"> <br>
+
+                    <button type="button" onclick="insertBill()">Submit</button>
+                    <button type="button" onclick="closeInsertBillPopup()">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="modifyBillPopup" class="popup">
+            <div class="popup-content">
+                <form>
+                     <label for="modifyBillID">Bill ID</label>
+                     <input type="number" id="modifyBillID" name="modifyBillID"> <br>
+
+                     <label for="modifyBillCode">Bill Code</label>
+                     <input type="text" id="modifyBillCode" name="modifyBillCode"> <br>
+
+                     <label for="modifyBillDescription">Bill Description</label>
+                     <input type="text" id="modifyBillDescription" name="modifyBillDescription"> <br>
+                    <button type="button" onclick="updateBill()">Update</button>
+                    <button type="button" onclick="closeModifyBillPopup()">Cancel</button>
+                </form>
+            </div>
+        </div>
+        `;
+            document.getElementById('output').innerHTML = billInstruction;
+        }
+
+        function selectBillRow(billCode, billID) {
+            var rows = document.querySelectorAll("table tr");
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].classList.remove("selected");
+            }
+
+            var selectedRow = document.querySelector("tr[data-billid='" + billID + "']");
+            if (selectedRow) {
+                selectedRow.classList.add("selected");
+            }
+        }
+
+        function showInsertBillPopup() {
+            document.getElementById('insertBillPopup').style.display = 'block';
+        }
+
+        function closeInsertBillPopup() {
+            document.getElementById('insertBillPopup').style.display = 'none';
+        }
+
+        function insertBill() {
+            closeInsertBillPopup();
+        }
+
+        function showModifyBillPopup() {
+            var table = document.querySelector("table");
+            var selectedRow = table.querySelector(".selected");
+
+            if (selectedRow) {
+                var billCode = selectedRow.cells[1].innerText;
+                var billDescription = selectedRow.cells[2].innerText;
+                var billID = selectedRow.cells[0].innerText;
+
+                document.getElementById('modifyBillID').value = billID;
+                document.getElementById('modifyBillCode').value = billCode;
+                document.getElementById('modifyBillDescription').value = billDescription;
+
+                document.getElementById('modifyBillPopup').style.display = 'block';
             } else {
                 alert("Please select a row to modify.");
             }
         }
 
+        function updateBill() {
+            var billID = document.getElementById('modifyBillID').value;
+            var billCode = document.getElementById('modifyBillCode').value;
+            var billDescription = document.getElementById('modifyBillDescription').value;
 
-        function update() {
+            var selectedRow = document.querySelector("tr[data-billid='" + billID + "']");
+            selectedRow.cells[2].innerText = billDescription;
 
-            var roomCode = document.getElementById('modifyRoomCode').value;
-            var roomDescription = document.getElementById('modifyRoomDescription').value;
-
-
-            var selectedRow = document.querySelector("tr[data-roomid='" + roomCode + "']");
-            selectedRow.cells[2].innerText = roomDescription;
-
-
-            closeModifyPopup();
-
+            closeModifyBillPopup();
 
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4) {
                     if (this.status == 200) {
-
                         if (this.responseText.trim() === "Update successful") {
                             alert("Update successful");
                         } else {
@@ -333,99 +525,62 @@
                 }
             };
 
-            xhttp.open("POST", "roomupdate.php", true);
+            xhttp.open("POST", "billupdate.php", true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("roomCode=" + encodeURIComponent(roomCode) + "&roomDescription=" + encodeURIComponent(roomDescription));
+            xhttp.send("billID=" + encodeURIComponent(billID) + "&billCode=" + encodeURIComponent(billCode) + "&billDescription=" + encodeURIComponent(billDescription));
         }
 
-
-        function closeModifyPopup() {
-            document.getElementById('modifyRoomCode').value = '';
-            document.getElementById('modifyRoomDescription').value = '';
-            document.getElementById('modifyPopup').style.display = 'none';
+        function closeModifyBillPopup() {
+            document.getElementById('modifyBillID').value = '';
+            document.getElementById('modifyBillCode').value = '';
+            document.getElementById('modifyBillDescription').value = '';
+            document.getElementById('modifyBillPopup').style.display = 'none';
         }
 
-        function view() {
+        function deleteBillRow() {
             var table = document.querySelector("table");
             var selectedRow = table.querySelector(".selected");
 
             if (selectedRow) {
+                var billID = selectedRow.cells[0].innerText;
 
-                var roomID = selectedRow.cells[0].innerText;
-                var roomCode = selectedRow.cells[1].innerText;
-                var roomDescription = selectedRow.cells[2].innerText;
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            selectedRow.remove();
+                        } else {
+                            alert("Failed to delete the row. Please try again.");
+                        }
+                    }
+                };
 
+                xhttp.open("POST", "billdelete.php", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("billId=" + encodeURIComponent(billID));
+            } else {
+                alert("Please select a row to delete.");
+            }
+        }
 
-                var details = "Room ID: " + roomID + "\nRoom Code: " + roomCode + "\nRoom Description: " + roomDescription;
+        function viewBill() {
+            var table = document.querySelector("table");
+            var selectedRow = table.querySelector(".selected");
+
+            if (selectedRow) {
+                var billID = selectedRow.cells[0].innerText;
+                var billCode = selectedRow.cells[1].innerText;
+                var billDescription = selectedRow.cells[2].innerText;
+
+                var details = "Bill ID: " + billID + "\nBill Code: " + billCode + "\nBill Description: " + billDescription;
                 alert(details);
             } else {
                 alert("Please select a row to view details.");
             }
         }
 
-        function close() {
-            var table = document.querySelector("table");
-            var rows = table.querySelectorAll("tr");
+        function closeBill() {}
 
-            for (var i = 0; i < rows.length; i++) {
-                rows[i].classList.remove("selected");
-            }
-        }
-
-
-        function billinstruction() {
-            const billInstruction = `
-        <div id="billInstruction">
-            <h2><b>Bill Instruction List</b></h2>
-            <div class="commontable">
-                <?php
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $dbname = "menu";
-
-                $conn = new mysqli($servername, $username, $password, $dbname);
-
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
-
-                $sql = "SELECT BillCode, BillDescription FROM roommaster";
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    echo "<table>
-                        <tr>
-                            <th>Bill Code</th>
-                            <th>Bill Description</th>
-                        </tr>";
-
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr data-billid='{$row['BillCode']}' onclick='selectRow(\"{$row['BillCode']}\")'>
-                                <td>{$row['BillCode']}</td>
-                                <td>{$row['BillDescription']}</td>
-                            </tr>";
-                    }
-
-                    echo "</table>";
-                } else {
-                    echo "No records found";
-                }
-
-                $conn->close();
-                ?>
-                <div class="button-container">
-                    <button onclick="insert()">Insert</button>
-                    <button onclick="modify()">Modify</button>
-                    <button onclick="delete()">Delete</button>
-                    <button onclick="view()">View</button>
-                    <button onclick="close()">Close</button>
-                </div>
-            </div>
-        </div>
-        `;
-            document.getElementById('output').innerHTML = billInstruction;
-        }
 
 
 
@@ -469,8 +624,7 @@
                     <th>Description</th>
                     <th>Card Limit</th>
                     <th>Commission</th>
-                </tr>
-                
+                </tr>                
             </table>
             <div class="button-container">
                 <button onclick="insert()">Insert</button>

@@ -1,3 +1,4 @@
+
 <?php
 $servername = "localhost";
 $username = "root";
@@ -11,22 +12,20 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $roomId = isset($_POST['roomId']) ? $_POST['roomId'] : $_POST['roomID'];
-    $roomcode = $_POST['roomCode'];
-    $roomdescription = $_POST['roomDescription'];
+    $billId = isset($_POST['billId']) ? $_POST['billId'] : $_POST['billID'];
+    $billCode = $_POST['billCode'];
+    $billDescription = $_POST['billDescription'];
 
     if (isset($_POST['modify']) && $_POST['modify'] === 'modify') {
-     
-        $sql = "UPDATE roommaster SET RoomCode='$roomcode', RoomDescription='$roomdescription' WHERE RoomID='$roomId'";
+        $sql = "UPDATE billmaster SET BillCode='$billCode', BillDescription='$billDescription' WHERE BillID='$billId'";
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'submit') {
-      
-        $checkSql = "SELECT * FROM roommaster WHERE RoomID='$roomId'";
+        $checkSql = "SELECT * FROM billmaster WHERE BillID='$billId'";
         $result = $conn->query($checkSql);
 
         if ($result->num_rows > 0) {
-            echo "Error: RoomID already exists";
+            echo "Error: BillID already exists";
         } else {
-            $sql = "INSERT INTO roommaster (RoomID, RoomCode, RoomDescription) VALUES ('$roomId', '$roomcode', '$roomdescription')";
+            $sql = "INSERT INTO billmaster (BillID, BillCode, BillDescription) VALUES ('$billId', '$billCode', '$billDescription')";
         }
     }
 
