@@ -360,112 +360,112 @@
         }
 
         function close() {
-            window.location.href = '';
+            window.location.href = '#';
         }
 
 
 
         function billinstruction() {
             const billInstruction = `
-        <div id="billInstruction">
-            <h2><b>Bill Instruction List</b></h2>
-                <div class="commontable">
-                    <?php
-                    $servername = "localhost";
-                    $username = "root";
-                    $password = "";
-                    $dbname = "menu";
+<div id="billInstruction">
+    <h2><b>Bill Instruction List</b></h2>
+    <div class="commontable">
+        <?php
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "menu";
 
-                    $conn = new mysqli($servername, $username, $password, $dbname);
+        $conn = new mysqli($servername, $username, $password, $dbname);
 
-                    if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
-                    }
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
 
-                    $sql = "SELECT BillID, BillCode, BillDescription FROM billmaster";
-                    $result = $conn->query($sql);
+        $sql = "SELECT BillID, BillCode, BillDescription FROM billmaster";
+        $result = $conn->query($sql);
 
-                    if ($result->num_rows > 0) {
-                        echo "<table>
-                        <tr>
-                            <th>Bill ID</th>
-                            <th>Bill Code</th>
-                            <th>Bill Description</th>
-                        </tr>";
+        if ($result->num_rows > 0) {
+            echo "<table>
+            <tr>
+                <th>Bill ID</th>
+                <th>Bill Code</th>
+                <th>Bill Description</th>
+            </tr>";
 
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr data-billid='{$row['BillID']}' data-billcode='{$row['BillCode']}' onclick='selectRow(\"{$row['BillCode']}\", \"{$row['BillID']}\")'>
-                                <td>{$row['BillID']}</td>
-                                <td>{$row['BillCode']}</td>
-                                <td>{$row['BillDescription']}</td>
-                            </tr>";
-                        }
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr data-billid='{$row['BillID']}' data-billcode='{$row['BillCode']}' onclick='highlightRow(\"{$row['BillCode']}\", \"{$row['BillID']}\")'>
+                    <td>{$row['BillID']}</td>
+                    <td>{$row['BillCode']}</td>
+                    <td>{$row['BillDescription']}</td>
+                </tr>";
+            }
 
-                        echo "</table>";
-                    } else {
-                        echo "No records found";
-                    }
+            echo "</table>";
+        } else {
+            echo "No records found";
+        }
 
-                    $conn->close();
-                    ?>
+        $conn->close();
+        ?>
 
-                    <div class="button-container">
-                        <button onclick="showInsertBillPopup()">Insert</button>
-                        <button onclick="showModifyBillPopup()">Modify</button>
-                        <button onclick="deleteBillRow()">Delete</button>
-                        <button onclick="viewBill()">View</button>
-                        <button onclick="closeBill()">Close</button>
-                    </div>
-                </div>
+        <div class="button-container">
+            <button onclick="showInsertBillPopup()">Insert</button>
+            <button onclick="showModifyBillPopup()">Modify</button>
+            <button onclick="deleteBillRow()">Delete</button>
+            <button onclick="viewBill()">View</button>
+            <button onclick="closeBill()">Close</button>
         </div>
+    </div>
+</div>
 
-        <div id="insertBillPopup" class="popup">
-            <div class="popup-content">
-                <form action="billmaster.php" method="post">
-                     <label for="billID">Bill ID</label>
-                     <input type="text" id="billID" name="billID"> <br>
+<div id="insertBillPopup" class="popup">
+    <div class="popup-content">
+        <form action="billmaster.php" method="post">
+             <label for="billID">Bill ID</label>
+             <input type="text" id="billID" name="billID"> <br>
 
-                     <label for="billCode">Bill Code</label>
-                     <input type="text" id="billCode" name="billCode"> <br>
+             <label for="billCode">Bill Code</label>
+             <input type="text" id="billCode" name="billCode"> <br>
 
-                     <label for="billDescription">Bill Description</label>
-                     <input type="text" id="billDescription" name="billDescription"> <br>
+             <label for="billDescription">Bill Description</label>
+             <input type="text" id="billDescription" name="billDescription"> <br>
 
-                    <button type="submit" name="submit">Submit</button>
-                    <button type="button" onclick="closeInsertBillPopup()">Cancel</button>
-                </form>
-            </div>
-        </div>
+            <button type="submit" name="submit">Submit</button>
+            <button type="button" onclick="closeInsertBillPopup()">Cancel</button>
+        </form>
+    </div>
+</div>
 
-        <div id="modifyBillPopup" class="popup">
-            <div class="popup-content">
-                <form action="billmaster.php" method="post">
-                     <label for="modifyBillID">Bill ID</label>
-                     <input type="number" id="modifyBillID" name="modifyBillID"> <br>
+<div id="modifyBillPopup" class="popup">
+    <div class="popup-content">
+        <form action="billmaster.php" method="post">
+             <label for="modifyBillID">Bill ID</label>
+             <input type="number" id="modifyBillID" name="modifyBillID"> <br>
 
-                     <label for="modifyBillCode">Bill Code</label>
-                     <input type="text" id="modifyBillCode" name="modifyBillCode"> <br>
+             <label for="modifyBillCode">Bill Code</label>
+             <input type="text" id="modifyBillCode" name="modifyBillCode"> <br>
 
-                     <label for="modifyBillDescription">Bill Description</label>
-                     <input type="text" id="modifyBillDescription" name="modifyBillDescription"> <br>
-                    <button type="submit" name="modify" value="modify">Update</button>
-                    <button type="button" onclick="closeModifyBillPopup()">Cancel</button>
-                </form>
-            </div>
-        </div>
-        `;
+             <label for="modifyBillDescription">Bill Description</label>
+             <input type="text" id="modifyBillDescription" name="modifyBillDescription"> <br>
+            <button type="submit" name="modify" value="modify">Update</button>
+            <button type="button" onclick="closeModifyBillPopup()">Cancel</button>
+        </form>
+    </div>
+</div>
+`;
             document.getElementById('output').innerHTML = billInstruction;
         }
 
-        function selectRow(billCode, billID) {
+        function highlightRow(billCode, billID) {
             var rows = document.querySelectorAll("table tr");
             for (var i = 0; i < rows.length; i++) {
                 rows[i].classList.remove("selected");
             }
 
-            var selectedRow = document.querySelector("tr[data-billid='" + billID + "']");
-            if (selectedRow) {
-                selectedRow.classList.add("selected");
+            var highlightedRow = document.querySelector("tr[data-billid='" + billID + "']");
+            if (highlightedRow) {
+                highlightedRow.classList.add("selected");
             }
         }
 
@@ -478,11 +478,11 @@
         }
 
         function showModifyBillPopup() {
-            var selectedRow = document.querySelector("table tr.selected");
-            if (selectedRow) {
-                var billID = selectedRow.getAttribute('data-billid');
-                var billCode = selectedRow.getAttribute('data-billcode');
-                var billDescription = selectedRow.cells[2].innerHTML;
+            var highlightedRow = document.querySelector("table tr.selected");
+            if (highlightedRow) {
+                var billID = highlightedRow.getAttribute('data-billid');
+                var billCode = highlightedRow.getAttribute('data-billcode');
+                var billDescription = highlightedRow.cells[2].innerHTML;
 
                 document.getElementById('modifyBillID').value = billID;
                 document.getElementById('modifyBillCode').value = billCode;
@@ -499,32 +499,50 @@
         }
 
         function deleteBillRow() {
-            var table = document.querySelector("table"); 
-            var selectedRow = table.querySelector(".selected"); 
+            var table = document.querySelector("table");
+            var highlightedRow = table.querySelector(".selected");
 
-            if (selectedRow) {
-                var billID = selectedRow.cells[0].innerText; 
+            if (highlightedRow) {
+                var billID = highlightedRow.cells[0].innerText;
 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4) {
                         if (this.status == 200) {
-                            selectedRow.remove();
+                            highlightedRow.remove();
                         } else {
                             alert("Failed to delete the row. Please try again.");
                         }
                     }
                 };
 
-                xhttp.open("POST", "billdelete.php", true); 
+                xhttp.open("POST", "billdelete.php", true);
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send("billId=" + encodeURIComponent(billID)); 
+                xhttp.send("billId=" + encodeURIComponent(billID));
             } else {
                 alert("Please select a row to delete.");
             }
         }
 
+        function viewBill() {
+            var table = document.querySelector("table");
+            var selectedRow = table.querySelector(".selected");
 
+            if (selectedRow) {
+                var billID = selectedRow.getAttribute('data-billid');
+                var billCode = selectedRow.cells[1].innerText;
+                var billDescription = selectedRow.cells[2].innerText;
+
+                var details = "Bill ID: " + billID + "\nBill Code: " + billCode + "\nBill Description: " + billDescription;
+                alert(details);
+            } else {
+                alert("Please select a row to view details.");
+            }
+        }
+
+        function close() {
+            window.location.href = '';
+        }
 
 
 

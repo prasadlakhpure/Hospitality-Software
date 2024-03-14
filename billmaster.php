@@ -10,7 +10,6 @@
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Insert Bill
     if(isset($_POST['submit'])) {
         $billID = $_POST['billID'];
         $billCode = $_POST['billCode'];
@@ -27,7 +26,6 @@
         }
     }
 
-    // Modify Bill
     if(isset($_POST['modify'])) {
         $modifyBillID = $_POST['modifyBillID'];
         $modifyBillCode = $_POST['modifyBillCode'];
