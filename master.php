@@ -924,20 +924,6 @@
             window.location.href = '';
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         function companymaster() {
             const company = `
         <div id="company">
@@ -1037,9 +1023,7 @@
 
     `;
             document.getElementById('output').innerHTML = company;
-
         }
-
 
         function highlightCompanyRow(companyId) {
             var rows = document.querySelectorAll("#companyTable tr");
@@ -1065,8 +1049,8 @@
             var selectedRow = document.querySelector("#companyTable tr.selected");
             if (selectedRow) {
                 var companyId = selectedRow.getAttribute('data-companyid');
-                var companyName = selectedRow.cells[2].innerText; 
-                var companyCode = selectedRow.cells[1].innerText; 
+                var companyName = selectedRow.cells[2].innerText;
+                var companyCode = selectedRow.cells[1].innerText;
                 var city = selectedRow.cells[3].innerText;
 
                 document.getElementById('modifyCompanyID').value = companyId;
@@ -1139,25 +1123,184 @@
         <div id="country">
             <h2><b>Country List</b></h2>
             <div class = commontable>
-            <table>
-                <tr>
-                    <th>Country Code</th>
-                    <th>Name of Country</th>
-                </tr>
-                
-            </table>
+            <?php
+            $servername = "localhost";
+            $username = "root";
+            $password = "";
+            $dbname = "menu";
+
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+            $sql = "SELECT CountryID, CountryCode, CountryName FROM countrymaster";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                echo "<table id='countryTable'> <!-- Add id to the table -->
+     <tr>
+        <th>Country ID</th>
+        <th>Country Code</th>
+        <th>Name of Country</th>
+    </tr>";
+
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr data-countryid='{$row['CountryID']}' data-countrycode='{$row['CountryCode']}' data-countryname='{$row['CountryName']}' onclick='highlightCountryRow(\"{$row['CountryID']}\")'>
+        <td>{$row['CountryID']}</td>
+        <td>{$row['CountryCode']}</td>
+        <td>{$row['CountryName']}</td>
+    </tr>";
+                }
+
+                echo "</table>";
+            } else {
+                echo "No records found";
+            }
+
+            $conn->close();
+            ?>
+
             <div class="button-container">
-                <button onclick="insert()">Insert</button>
-                <button onclick="modify()">Modify</button>
-                <button onclick="delete()">Delete</button>
-                <button onclick="view()">View</button>
-                <button onclick="close()">Close</button>
+                <button onclick="showInsertCountryPopup()">Insert</button>
+                <button onclick="showModifyCountryPopup()">Modify</button>
+                <button onclick="deleteCountry()">Delete</button>
+                <button onclick="viewCountry()">View</button>
+                <button onclick="closeCountry()">Close</button>
             </div>
          </div> 
-        </div>           
+        </div> 
+        
+        
+        <div id="insertCountryPopup" class="popup">
+    <div class="popup-content">
+        <form action="countrymaster.php" method="post">
+            <label for="countryID">Country ID</label>
+            <input type="text" id="countryID" name="countryID"> <br>
+
+            <label for="countryCode">Country Code</label>
+            <input type="text" id="countryCode" name="countryCode"> <br>
+
+            <label for="countryName">Name of Country</label>
+            <input type="text" id="countryName" name="countryName"> <br>
+
+            <button type="submit" name="submit">Submit</button>
+            <button type="button" onclick="closeInsertCountryPopup()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<div id="modifyCountryPopup" class="popup">
+    <div class="popup-content">
+        <form action="countrymaster.php" method="post">
+            <label for="modifyCountryID">Country ID</label>
+            <input type="text" id="modifyCountryID" name="modifyCountryID"> <br>
+
+            <label for="modifyCountryCode">Country Code</label>
+            <input type="text" id="modifyCountryCode" name="modifyCountryCode"> <br>
+
+            <label for="modifyCountryName">Name of Country</label>
+            <input type="text" id="modifyCountryName" name="modifyCountryName"> <br>
+
+            <button type="submit" name="modify" value="modify">Update</button>
+            <button type="button" onclick="closeModifyCountryPopup()">Cancel</button>
+        </form>
+    </div>
+</div>
+
     `;
             document.getElementById('output').innerHTML = country;
         }
+
+        function highlightCountryRow(countryId) {
+            var rows = document.querySelectorAll("#countryTable tr");
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].classList.remove("selected");
+            }
+
+            var selectedRow = document.querySelector("tr[data-countryid='" + countryId + "']");
+            if (selectedRow) {
+                selectedRow.classList.add("selected");
+            }
+        }
+
+        function showInsertCountryPopup() {
+            document.getElementById('insertCountryPopup').style.display = 'block';
+        }
+
+        function closeInsertCountryPopup() {
+            document.getElementById('insertCountryPopup').style.display = 'none';
+        }
+
+        function showModifyCountryPopup() {
+            var selectedRow = document.querySelector("#countryTable tr.selected");
+            if (selectedRow) {
+                var countryId = selectedRow.getAttribute('data-countryid');
+                var countryName = selectedRow.cells[2].innerText;
+                var countryCode = selectedRow.cells[1].innerText;
+
+                document.getElementById('modifyCountryID').value = countryId;
+                document.getElementById('modifyCountryName').value = countryName;
+                document.getElementById('modifyCountryCode').value = countryCode;
+
+                document.getElementById('modifyCountryPopup').style.display = 'block';
+            } else {
+                alert('Please select a country to modify.');
+            }
+        }
+
+        function closeModifyCountryPopup() {
+            document.getElementById('modifyCountryPopup').style.display = 'none';
+        }
+
+
+        function deleteCountry() {
+            var selectedRow = document.querySelector("#countryTable tr.selected");
+            if (selectedRow) {
+                var countryId = selectedRow.getAttribute('data-countryid');
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            selectedRow.remove();
+                        } else {
+                            alert("Failed to delete the row. Please try again.");
+                        }
+                    }
+                };
+
+                xhttp.open("POST", "countrydelete.php", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("countryID=" + encodeURIComponent(countryId));
+            } else {
+                alert("Please select a row to delete.");
+            }
+        }
+
+        function viewCountry() {
+            var selectedRow = document.querySelector("#countryTable tr.selected");
+
+            if (selectedRow) {
+                var countryId = selectedRow.getAttribute('data-countryid');
+                var countryName = selectedRow.cells[2].textContent;
+                var countryCode = selectedRow.cells[1].textContent;
+
+                var details = "Country ID: " + countryId + "\nCountry Name: " + countryName + "\nCountry Code: " + countryCode;
+                alert(details);
+            } else {
+                alert("Please select a row to view details.");
+            }
+        }
+
+        function closeCountry() {
+            window.location.href = '';
+        }
+
+
+
+
+
 
         function packagemaster() {
 
