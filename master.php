@@ -603,152 +603,57 @@
         </div>
 
         <div id="insertCreditCardPopup" class="popup">
-    <div class="popup-content">
-        <form action="creditmaster.php" method="post">
-            <label for="creditID">Credit ID</label>
-            <input type="text" id="creditID" name="creditID"> <br>
+            <div class="popup-content">
+                <form action="creditmaster.php" method="post">
+                    <label for="creditID">Credit ID</label>
+                    <input type="text" id="creditID" name="creditID"> <br>
 
-            <label for="creditCode">Credit Code</label>
-            <input type="text" id="creditCode" name="creditCode"> <br>
-                
-            <label for="description">Description</label>
-            <input type="text" id="description" name="description"> <br>
+                    <label for="creditCode">Credit Code</label>
+                    <input type="text" id="creditCode" name="creditCode"> <br>
+                    
+                    <label for="description">Description</label>
+                    <input type="text" id="description" name="description"> <br>
 
-            <label for="cardLimit">Card Limit</label>
-            <input type="text" id="cardLimit" name="cardLimit"> <br>
+                    <label for="cardLimit">Card Limit</label>
+                    <input type="text" id="cardLimit" name="cardLimit"> <br>
 
-            <label for="commission">Commission</label>
-            <input type="text" id="commission" name="commission"> <br>
+                    <label for="commission">Commission</label>
+                    <input type="text" id="commission" name="commission"> <br>
 
-            <button type="submit" name="submit">Submit</button>
-            <button type="button" onclick="closeInsertCreditCardPopup()">Cancel</button>
-        </form>
-    </div>
-</div>
+                    <button type="submit" name="submit">Submit</button>
+                    <button type="button" onclick="closeInsertCreditCardPopup()">Cancel</button>
+                </form>
+            </div>
+        </div>
 
-<div id="modifyCreditCardPopup" class="popup">
-    <div class="popup-content">
-        <form action="creditmaster.php" method="post">
-            <label for="modifyCreditID">Credit ID</label>
-            <input type="text" id="modifyCreditID" name="modifyCreditID"> <br>
+        <div id="modifyCreditCardPopup" class="popup">
+            <div class="popup-content">
+                <form action="creditmaster.php" method="post">
+                    <label for="modifyCreditID">Credit ID</label>
+                    <input type="text" id="modifyCreditID" name="modifyCreditID"> <br>
 
-            <label for="modifyCreditCode">Credit Code</label>
-            <input type="text" id="modifyCreditCode" name="modifyCreditCode"> <br>
+                    <label for="modifyCreditCode">Credit Code</label>
+                    <input type="text" id="modifyCreditCode" name="modifyCreditCode"> <br>
 
-            <label for="modifyDescription">Description</label>
-            <input type="text" id="modifyDescription" name="modifyDescription"> <br>
+                    <label for="modifyDescription">Description</label>
+                    <input type="text" id="modifyDescription" name="modifyDescription"> <br>
 
-            <label for="modifyCardLimit">Card Limit</label>
-            <input type="text" id="modifyCardLimit" name="modifyCardLimit"> <br>
+                    <label for="modifyCardLimit">Card Limit</label>
+                    <input type="text" id="modifyCardLimit" name="modifyCardLimit"> <br>
 
-            <label for="modifyCommission">Commission</label>
-            <input type="text" id="modifyCommission" name="modifyCommission"> <br>
+                    <label for="modifyCommission">Commission</label>
+                    <input type="text" id="modifyCommission" name="modifyCommission"> <br>
 
-            <button type="submit" name="modify" value="modify">Update</button>
-            <button type="button" onclick="closeModifyCreditCardPopup()">Cancel</button>
-        </form>
-    </div>
-        
-        `;
+                    <button type="submit" name="modify" value="modify">Update</button>
+                    <button type="button" onclick="closeModifyCreditCardPopup()">Cancel</button>
+                </form>
+            </div>
+        </div>
+    `;
             document.getElementById('output').innerHTML = creditCard;
         }
 
-
-        function highlightRow(creditCode, creditID) {
-            var rows = document.querySelectorAll("#creditCard table tr");
-            for (var i = 0; i < rows.length; i++) {
-                rows[i].classList.remove("selected");
-            }
-
-            var selectedRow = document.querySelector("#creditCard table tr[data-creditid='" + creditID + "']");
-            if (selectedRow) {
-                selectedRow.classList.add("selected");
-            }
-        }
-
-        function showInsertCreditCardPopup() {
-            document.getElementById('insertCreditCardPopup').style.display = 'block';
-        }
-
-        function closeInsertCreditCardPopup() {
-            document.getElementById('insertCreditCardPopup').style.display = 'none';
-        }
-
-        function showModifyCreditCardPopup() {
-            var highlightedRow = document.querySelector("#creditCard table tr.selected");
-            if (highlightedRow) {
-                var creditID = highlightedRow.getAttribute('data-creditid');
-                var creditCode = highlightedRow.cells[1].innerText;
-                var description = highlightedRow.cells[2].innerText;
-                var cardLimit = highlightedRow.cells[3].innerText;
-                var commission = highlightedRow.cells[4].innerText;
-
-                document.getElementById('modifyCreditID').value = creditID;
-                document.getElementById('modifyCreditCode').value = creditCode;
-                document.getElementById('modifyDescription').value = description;
-                document.getElementById('modifyCardLimit').value = cardLimit;
-                document.getElementById('modifyCommission').value = commission;
-
-                document.getElementById('modifyCreditCardPopup').style.display = 'block';
-            } else {
-                alert('Please select a credit card to modify.');
-            }
-        }
-
-        function closeModifyCreditCardPopup() {
-            document.getElementById('modifyCreditCardPopup').style.display = 'none';
-        }
-
-        function deleteCreditCard() {
-            var table = document.querySelector("#creditCard table");
-            var selectedRow = table.querySelector(".selected");
-
-            if (selectedRow) {
-                var creditID = selectedRow.cells[0].innerText;
-
-                var xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4) {
-                        if (this.status == 200) {
-                            selectedRow.remove();
-                        } else {
-                            alert("Failed to delete the row. Please try again.");
-                        }
-                    }
-                };
-
-                xhttp.open("POST", "creditdelete.php", true);
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send("creditId=" + encodeURIComponent(creditID));
-            } else {
-                alert("Please select a row to delete.");
-            }
-        }
-
-        function viewCreditCard() {
-            var table = document.querySelector("#creditCard table");
-            var selectedRow = table.querySelector(".selected");
-
-            if (selectedRow) {
-                var creditID = selectedRow.getAttribute('data-creditid');
-                var creditCode = selectedRow.cells[1].innerText;
-                var description = selectedRow.cells[2].innerText;
-                var cardLimit = selectedRow.cells[3].innerText;
-                var commission = selectedRow.cells[4].innerText;
-
-                var details = "Credit ID: " + creditID + "\nCredit Code: " + creditCode + "\nDescription: " + description + "\nCard Limit: " + cardLimit + "\nCommission: " + commission;
-                alert(details);
-            } else {
-                alert("Please select a row to view details.");
-            }
-        }
-
-        function closeCreditCard() {
-            window.location.href = '';
-        }
-
-
-
+       
 
 
 
@@ -758,26 +663,34 @@
             const currency = `
         <div id="currency">
             <h2><b>Currency List</b></h2>
-            <div class = commontable>
-            <table>
-                <tr>
-                    <th>Country Name</th>
-                    <th>Currency of Country</th>
-                </tr>
+            <div class="commontable">
                 
-            </table>
-            <div class="button-container">
-                <button onclick="insert()">Insert</button>
-                <button onclick="modify()">Modify</button>
-                <button onclick="delete()">Delete</button>
-                <button onclick="view()">View</button>
-                <button onclick="close()">Close</button>
+                <div class="button-container">
+                    <button onclick="showInsertCurrencyPopup()">Insert</button>
+                    <button onclick="showModifyCurrencyPopup()">Modify</button>
+                    <button onclick="deleteCurrency()">Delete</button>
+                    <button onclick="viewCurrency()">View</button>
+                    <button onclick="closeCurrency()">Close</button>
+                </div>
             </div>
-         </div> 
-        </div>           
+        </div>
     `;
             document.getElementById('output').innerHTML = currency;
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         function companymaster() {
             const company = `
