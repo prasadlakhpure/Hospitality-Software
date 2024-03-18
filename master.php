@@ -748,44 +748,48 @@
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         function currencymaster() {
             const currency = `
         <div id="currency">
             <h2><b>Currency List</b></h2>
             <div class="commontable">
+            <?php
+            $servername = "localhost";
+            $username = "root";
+            $password = "";
+            $dbname = "menu";
+
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+            $sql = "SELECT CurrencyID, CountryName, CurrencyOfCountry FROM currencymaster";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                echo "<table>
+                    <tr>
+                        <th>Currency ID</th>
+                        <th>Country Name</th>
+                        <th>Currency of Country</th>
+                    </tr>";
+
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr data-currencyid='{$row['CurrencyID']}' data-countryname='{$row['CountryName']}' onclick='highlightCurrencyRow(\"{$row['CurrencyID']}\")'>
+                        <td>{$row['CurrencyID']}</td>
+                        <td>{$row['CountryName']}</td>
+                        <td>{$row['CurrencyOfCountry']}</td>
+                        </tr>";
+                }
+
+                echo "</table>";
+            } else {
+                echo "No records found";
+            }
+
+            $conn->close();
+            ?>
                 
                 <div class="button-container">
                     <button onclick="showInsertCurrencyPopup()">Insert</button>
@@ -796,8 +800,142 @@
                 </div>
             </div>
         </div>
+        <div id="insertCurrencyPopup" class="popup">
+        <div class="popup-content">
+                <form action="currencymaster.php" method="post">
+                    <label for="currencyID">Currency ID</label>
+                    <input type="text" id="currencyID" name="currencyID"> <br>
+
+                    <label for="countryName">Country Name</label>
+                    <input type="text" id="countryName" name="countryName"> <br>
+                        
+                    <label for="currencyOfCountry">Currency of Country</label>
+                    <input type="text" id="currencyOfCountry" name="currencyOfCountry"> <br>
+
+                    <button type="submit" name="submit">Submit</button>
+                    <button type="button" onclick="closeInsertCurrencyPopup()">Cancel</button>
+                </form>
+            </div>
+        </div>
+        <div id="modifyCurrencyPopup" class="popup">
+            <div class="popup-content">
+                <form action="currencymaster.php" method="post">
+                    <label for="modifyCurrencyID">Currency ID</label>
+                    <input type="text" id="modifyCurrencyID" name="modifyCurrencyID"> <br>
+
+                    <label for="modifyCountryName">Country Name</label>
+                    <input type="text" id="modifyCountryName" name="modifyCountryName"> <br>
+
+                    <label for="modifyCurrencyOfCountry">Currency of Country</label>
+                    <input type="text" id="modifyCurrencyOfCountry" name="modifyCurrencyOfCountry"> <br>
+
+                    <button type="submit" name="modify" value="modify">Update</button>
+                    <button type="button" onclick="closeModifyCurrencyPopup()">Cancel</button>
+                </form>
+            </div>
+        </div>
     `;
             document.getElementById('output').innerHTML = currency;
+        }
+
+        function highlightCurrencyRow(currencyId) {
+            var rows = document.querySelectorAll("#currencyTable tr");
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].classList.remove("selected");
+            }
+
+            var selectedRow = document.querySelector("tr[data-currencyid='" + currencyId + "']");
+            if (selectedRow) {
+                selectedRow.classList.add("selected");
+            }
+        }
+
+        function showInsertCurrencyPopup() {
+            document.getElementById('insertCurrencyPopup').style.display = 'block';
+        }
+
+        function closeInsertCurrencyPopup() {
+            document.getElementById('insertCurrencyPopup').style.display = 'none';
+        }
+
+        function showModifyCurrencyPopup() {
+            var selectedRow = document.querySelector("#currency .commontable table tr.selected");
+            if (selectedRow) {
+                var currencyId = selectedRow.getAttribute('data-currencyid');
+                var countryName = selectedRow.cells[1].innerText;
+                var currencyOfCountry = selectedRow.cells[2].innerText;
+
+                document.getElementById('modifyCurrencyID').value = currencyId;
+                document.getElementById('modifyCountryName').value = countryName;
+                document.getElementById('modifyCurrencyOfCountry').value = currencyOfCountry;
+
+                document.getElementById('modifyCurrencyPopup').style.display = 'block';
+            } else {
+                alert('Please select a currency to modify.');
+            }
+        }
+
+        function closeModifyCurrencyPopup() {
+            document.getElementById('modifyCurrencyPopup').style.display = 'none';
+        }
+
+        function deleteCurrency() {
+            var selectedRow = document.querySelector("#currency .commontable table tr.selected");
+
+            if (selectedRow) {
+                var currencyId = selectedRow.getAttribute('data-currencyid');
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            selectedRow.remove();
+                        } else {
+                            alert("Failed to delete the row. Please try again.");
+                        }
+                    }
+                };
+
+                xhttp.open("POST", "currencydelete.php", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("currencyID=" + encodeURIComponent(currencyId));
+            } else {
+                alert("Please select a row to delete.");
+            }
+        }
+
+        function viewCurrency() {
+            var selectedRow = document.querySelector("#currency .commontable table tr.selected");
+
+            if (selectedRow) {
+                var currencyId = selectedRow.getAttribute('data-currencyid');
+                var countryName = selectedRow.cells[1].textContent;
+                var currencyOfCountry = selectedRow.cells[2].textContent;
+
+                var details = "Currency ID: " + currencyId + "\nCountry Name: " + countryName + "\nCurrency of Country: " + currencyOfCountry;
+                alert(details);
+            } else {
+                alert("Please select a row to view details.");
+            }
+        }
+
+        function viewCurrency() {
+            var selectedRow = document.querySelector("#currency .commontable table tr.selected");
+
+            if (selectedRow) {
+                var currencyId = selectedRow.getAttribute('data-currencyid');
+                var countryName = selectedRow.cells[1].textContent;
+                var currencyOfCountry = selectedRow.cells[2].textContent;
+
+                var details = "Currency ID: " + currencyId + "\nCountry Name: " + countryName + "\nCurrency of Country: " + currencyOfCountry;
+                alert(details);
+            } else {
+                alert("Please select a row to view details.");
+            }
+        }
+
+        function closeCurrency() {
+            window.location.href = '';
         }
 
 
