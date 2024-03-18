@@ -718,8 +718,7 @@
 
                 xhttp.open("POST", "creditdelete.php", true);
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send("creditID=" + encodeURIComponent(creditCardID)); // Changed variable name to creditID
-            } else {
+                xhttp.send("creditID=" + encodeURIComponent(creditCardID));
                 alert("Please select a row to delete.");
             }
         }
@@ -834,6 +833,8 @@
                 </form>
             </div>
         </div>
+
+        
     `;
             document.getElementById('output').innerHTML = currency;
         }
@@ -919,21 +920,6 @@
             }
         }
 
-        function viewCurrency() {
-            var selectedRow = document.querySelector("#currency .commontable table tr.selected");
-
-            if (selectedRow) {
-                var currencyId = selectedRow.getAttribute('data-currencyid');
-                var countryName = selectedRow.cells[1].textContent;
-                var currencyOfCountry = selectedRow.cells[2].textContent;
-
-                var details = "Currency ID: " + currencyId + "\nCountry Name: " + countryName + "\nCurrency of Country: " + currencyOfCountry;
-                alert(details);
-            } else {
-                alert("Please select a row to view details.");
-            }
-        }
-
         function closeCurrency() {
             window.location.href = '';
         }
@@ -956,28 +942,195 @@
             const company = `
         <div id="company">
             <h2><b>Company List</b></h2>
-            <div class = commontable>
-            <table>
-                <tr>
-                    <th>Company Name</th>
-                    <th>Company Code</th>
-                    <th>City</th>                    
-                </tr>
-                
-            </table>
+            <div class="commontable">
+                <?php
+                $servername = "localhost";
+                $username = "root";
+                $password = "";
+                $dbname = "menu";
+
+                $conn = new mysqli($servername, $username, $password, $dbname);
+
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                $sql = "SELECT CompanyID, CompanyCode, CompanyName, City FROM companymaster";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    echo "<table id='companyTable'> <!-- Add id to the table -->
+                     <tr>
+                        <th>Company ID</th>
+                        <th>Company Code</th>
+                        <th>Company Name</th>
+                        <th>City</th> 
+                    </tr>";
+
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr data-companyid='{$row['CompanyID']}' data-companycode='{$row['CompanyCode']}' data-companyname='{$row['CompanyName']}' data-city='{$row['City']}' onclick='highlightCompanyRow(\"{$row['CompanyID']}\")'>
+                        <td>{$row['CompanyID']}</td>
+                        <td>{$row['CompanyCode']}</td>
+                        <td>{$row['CompanyName']}</td>
+                        <td>{$row['City']}</td> 
+                    </tr>";
+                    }
+
+                    echo "</table>";
+                } else {
+                    echo "No records found";
+                }
+
+                $conn->close();
+                ?>           
+
             <div class="button-container">
-                <button onclick="insert()">Insert</button>
-                <button onclick="modify()">Modify</button>
-                <button onclick="delete()">Delete</button>
-                <button onclick="view()">View</button>
-                <button onclick="close()">Close</button>
+                <button onclick="showInsertCompanyPopup()">Insert</button>
+                <button onclick="showModifyCompanyPopup()">Modify</button>
+                <button onclick="deleteCompany()">Delete</button>
+                <button onclick="viewCompany()">View</button>
+                <button onclick="closeCompany()">Close</button>
             </div>
          </div> 
-        </div>           
+        </div>   
+        
+        <div id="insertCompanyPopup" class="popup">
+    <div class="popup-content">
+        <form action="companymaster.php" method="post">
+            <label for="companyID">Company ID</label>
+            <input type="text" id="companyID" name="companyID"> <br>
+
+            <label for="companyCode">Company Code</label>
+            <input type="text" id="companyCode" name="companyCode"> <br>
+
+            <label for="companyName">Company Name</label>
+            <input type="text" id="companyName" name="companyName"> <br>
+
+            <label for="city">City</label>
+            <input type="text" id="city" name="city"> <br>
+
+            <button type="submit" name="submit">Submit</button>
+            <button type="button" onclick="closeInsertCompanyPopup()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<div id="modifyCompanyPopup" class="popup">
+    <div class="popup-content">
+        <form action="companymaster.php" method="post">
+            <label for="modifyCompanyID">Company ID</label>
+            <input type="text" id="modifyCompanyID" name="modifyCompanyID"> <br>
+
+            <label for="modifyCompanyCode">Company Code</label>
+            <input type="text" id="modifyCompanyCode" name="modifyCompanyCode"> <br>
+
+            <label for="modifyCompanyName">Company Name</label>
+            <input type="text" id="modifyCompanyName" name="modifyCompanyName"> <br>
+
+            <label for="modifyCity">City</label>
+            <input type="text" id="modifyCity" name="modifyCity"> <br>
+
+            <button type="submit" name="modify" value="modify">Update</button>
+            <button type="button" onclick="closeModifyCompanyPopup()">Cancel</button>
+        </form>
+    </div>
+</div>
+
     `;
             document.getElementById('output').innerHTML = company;
 
         }
+
+
+        function highlightCompanyRow(companyId) {
+            var rows = document.querySelectorAll("#companyTable tr");
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].classList.remove("selected");
+            }
+
+            var selectedRow = document.querySelector("tr[data-companyid='" + companyId + "']");
+            if (selectedRow) {
+                selectedRow.classList.add("selected");
+            }
+        }
+
+        function showInsertCompanyPopup() {
+            document.getElementById('insertCompanyPopup').style.display = 'block';
+        }
+
+        function closeInsertCompanyPopup() {
+            document.getElementById('insertCompanyPopup').style.display = 'none';
+        }
+
+        function showModifyCompanyPopup() {
+            var selectedRow = document.querySelector("#companyTable tr.selected");
+            if (selectedRow) {
+                var companyId = selectedRow.getAttribute('data-companyid');
+                var companyName = selectedRow.cells[2].innerText; 
+                var companyCode = selectedRow.cells[1].innerText; 
+                var city = selectedRow.cells[3].innerText;
+
+                document.getElementById('modifyCompanyID').value = companyId;
+                document.getElementById('modifyCompanyName').value = companyName;
+                document.getElementById('modifyCompanyCode').value = companyCode;
+                document.getElementById('modifyCity').value = city;
+
+                document.getElementById('modifyCompanyPopup').style.display = 'block';
+            } else {
+                alert('Please select a company to modify.');
+            }
+        }
+
+
+        function closeModifyCompanyPopup() {
+            document.getElementById('modifyCompanyPopup').style.display = 'none';
+        }
+
+        function deleteCompany() {
+            var selectedRow = document.querySelector("#companyTable tr.selected");
+            if (selectedRow) {
+                var companyId = selectedRow.getAttribute('data-companyid');
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            selectedRow.remove();
+                        } else {
+                            alert("Failed to delete the row. Please try again.");
+                        }
+                    }
+                };
+
+                xhttp.open("POST", "companydelete.php", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("companyID=" + encodeURIComponent(companyId));
+            } else {
+                alert("Please select a row to delete.");
+            }
+        }
+
+
+        function viewCompany() {
+            var selectedRow = document.querySelector("#companyTable tr.selected");
+
+            if (selectedRow) {
+                var companyId = selectedRow.getAttribute('data-companyid');
+                var companyName = selectedRow.cells[2].textContent;
+                var city = selectedRow.cells[3].textContent;
+
+                var details = "Company ID: " + companyId + "\nCompany Name: " + companyName + "\nCity: " + city;
+                alert(details);
+            } else {
+                alert("Please select a row to view details.");
+            }
+        }
+
+        function closeCompany() {
+            window.location.href = '';
+        }
+
+
+
 
 
 
