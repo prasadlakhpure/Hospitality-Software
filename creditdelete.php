@@ -11,22 +11,22 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $billId = isset($_POST['billId']) ? $_POST['billId'] : $_POST['billID'];
+    $creditID = isset($_POST['creditID']) ? $_POST['creditID'] : $_POST['modifyCreditID'];
 
-    $sql = "DELETE FROM billmaster WHERE BillID='$billId'";
+    $sql = "DELETE FROM creditmaster WHERE CreditID='$creditID'";
 
     if (!empty($sql)) {
         if ($conn->query($sql) === TRUE) {
             echo "Delete successful";
 
-            $deleteSql = "DELETE FROM your_other_table WHERE BillID='$billId'";
+            $deleteSql = "DELETE FROM your_other_table WHERE CreditID='$creditID'";
             if ($conn->query($deleteSql) === TRUE) {
                 echo "Record deleted from the database";
             } else {
                 echo "Error deleting record from the database: " . $conn->error;
             }
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            echo "Error deleting record: " . $conn->error;
         }
     }
 }
