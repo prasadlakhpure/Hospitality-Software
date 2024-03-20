@@ -18,11 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Row deleted successfully";
         header("Location: display.php");
         exit;
-
     } else {
         echo "Error deleting row: " . $conn->error;
     }
 }
 
 $conn->close();
-?>

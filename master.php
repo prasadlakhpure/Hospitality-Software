@@ -116,6 +116,7 @@
         <div class="navbar">
             <div class="navbar">
                 <button onclick="roomdescriptionmaster()"><b>Room Description Master</b></button>
+                <button onclick="roomtypemaster()"><b>Room Type Master</b></button>
                 <button onclick="billinstruction()"><b>Bill Instruction</b></button>
                 <button onclick="creditcardmaster()"><b>Credit Card Master</b></button>
                 <button onclick="currencymaster()"><b>Currency Master</b></button>
@@ -123,7 +124,6 @@
                 <button onclick="countrymaster()"><b>Country Master</b></button>
                 <button onclick="packagemaster()"><b>Package Master</b></button>
                 <button onclick="CGSTandSGST()"><b>CGST and SGST</b></button>
-                <!-- <button onclick="roomtypemaster()"><b>Room Type Master</b></button> -->
                 <!-- <button onclick="categorymaster()"><b>Category Master</b></button> -->
             </div>
         </div>
@@ -364,6 +364,176 @@
         }
 
 
+
+        function roomtypemaster() {
+            const roomtypemasterHTML = `
+        <div id="roomtypemaster">
+            <h2><b>Room Type Master</b></h2>
+            <div class="commontable">
+                <?php
+                $servername = "localhost";
+                $username = "root";
+                $password = "";
+                $dbname = "menu";
+
+                $conn = new mysqli($servername, $username, $password, $dbname);
+
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+
+                $sql = "SELECT RoomCode, RoomDescription FROM roomtypemaster";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    echo "<table>
+                        <tr>
+                            <th>Room Code</th>
+                            <th>Room Description</th>
+                        </tr>";
+
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr data-roomcode='{$row['RoomCode']}' onclick='highlightRoomTypeRow(\"{$row['RoomCode']}\")'>
+                            <td>{$row['RoomCode']}</td>
+                            <td>{$row['RoomDescription']}</td>
+                        </tr>";
+                    }
+
+                    echo "</table>";
+                } else {
+                    echo "No records found";
+                }
+
+                $conn->close();
+                ?>
+
+                <div class="button-container">
+                    <button onclick="showInsertRoomPopup()">Insert</button>
+                    <button onclick="showModifyRoomPopup()">Modify</button>
+                    <button onclick="deleteRoomRow()">Delete</button>
+                    <button onclick="viewRoom()">View</button>
+                    <button onclick="closeRoom()">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="insertRoomTypePopup" class="popup" style="display: none;">
+            <div class="popup-content">
+                <form id="insertForm" action="roomtypemaster.php" method="post">
+                    <label for="roomCode">Room Code</label>
+                    <input type="text" id="roomCode" name="roomCode"> <br>
+
+                    <label for="roomDescription">Room Description</label>
+                    <input type="text" id="roomDescription" name="roomDescription"> <br>
+
+                    <button type="submit" name="submit">Submit</button>
+                    <button type="button" onclick="closeInsertRoomPopup()">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="modifyRoomTypePopup" class="popup" style="display: none;">
+            <div class="popup-content">
+                <form action="roomtypemaster.php" method="post">
+                    <label for="modifyRoomCode">Room Code</label>
+                    <input type="text" id="modifyRoomCode" name="modifyRoomCode"> <br>
+
+                    <label for="modifyRoomDescription">Room Description</label>
+                    <input type="text" id="modifyRoomDescription" name="modifyRoomDescription"> <br>
+
+                    <button type="submit" name="modify" value="modify">Update</button>
+                    <button type="button" onclick="closeModifyRoomPopup()">Cancel</button>
+                </form>
+            </div>
+        </div>
+    `;
+            document.getElementById('output').innerHTML = roomtypemasterHTML;
+        }
+
+        function highlightRoomTypeRow(roomCode) {
+            var rows = document.querySelectorAll("#roomtypemaster table tr");
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].classList.remove("selected");
+            }
+            var highlightedRow = document.querySelector("#roomtypemaster tr[data-roomcode='" + roomCode + "']");
+            if (highlightedRow) {
+                highlightedRow.classList.add("selected");
+            }
+        }
+
+        function showInsertRoomPopup() {
+            document.getElementById('insertRoomTypePopup').style.display = 'block';
+        }
+
+        function closeInsertRoomPopup() {
+            document.getElementById('insertRoomTypePopup').style.display = 'none';
+        }
+
+        function showModifyRoomPopup() {
+            var highlightedRow = document.querySelector("#roomtypemaster table tr.selected");
+            if (highlightedRow) {
+                var roomCode = highlightedRow.getAttribute('data-roomcode');
+                var roomDescription = highlightedRow.cells[1].innerHTML;
+
+                document.getElementById('modifyRoomCode').value = roomCode;
+                document.getElementById('modifyRoomDescription').value = roomDescription;
+
+                document.getElementById('modifyRoomTypePopup').style.display = 'block';
+            } else {
+                alert('Please select a room to modify.');
+            }
+        }
+
+        function closeModifyRoomPopup() {
+            document.getElementById('modifyRoomTypePopup').style.display = 'none';
+        }
+
+        function deleteRoomRow() {
+            var table = document.querySelector("#roomtypemaster table");
+            var highlightedRow = table.querySelector(".selected");
+
+            if (highlightedRow) {
+                var roomCode = highlightedRow.getAttribute('data-roomcode');
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            highlightedRow.remove();
+                        } else {
+                            alert("Failed to delete the row. Please try again.");
+                        }
+                    }
+                };
+
+                xhttp.open("POST", "roomtypedelete.php", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("roomCode=" + encodeURIComponent(roomCode));
+            } else {
+                alert("Please select a row to delete.");
+            }
+        }
+
+        function viewRoom() {
+            var table = document.querySelector("#roomtypemaster table");
+            var selectedRow = table.querySelector(".selected");
+
+            if (selectedRow) {
+                var roomCode = selectedRow.getAttribute('data-roomcode');
+                var roomDescription = selectedRow.cells[1].innerText;
+
+                var details = "Room Code: " + roomCode +
+                    "\nRoom Description: " + roomDescription;
+
+                alert(details);
+            } else {
+                alert("Please select a row to view details.");
+            }
+        }
+
+        function closeRoom() {
+            window.location.href = '';
+        }
 
         function billinstruction() {
             const billInstruction = `
@@ -719,6 +889,7 @@
                 xhttp.open("POST", "creditdelete.php", true);
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send("creditID=" + encodeURIComponent(creditCardID));
+            } else {
                 alert("Please select a row to delete.");
             }
         }
@@ -1114,10 +1285,6 @@
         }
 
 
-
-
-
-
         function countrymaster() {
             const country = `
         <div id="country">
@@ -1134,23 +1301,24 @@
             if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
             }
+
             $sql = "SELECT CountryID, CountryCode, CountryName FROM countrymaster";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
-                echo "<table id='countryTable'> <!-- Add id to the table -->
-     <tr>
-        <th>Country ID</th>
-        <th>Country Code</th>
-        <th>Name of Country</th>
-    </tr>";
+                echo "<table id='countryTable'> 
+                    <tr>
+                        <th>Country ID</th>
+                        <th>Country Code</th>
+                        <th>Name of Country</th>
+                    </tr>";
 
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr data-countryid='{$row['CountryID']}' data-countrycode='{$row['CountryCode']}' data-countryname='{$row['CountryName']}' onclick='highlightCountryRow(\"{$row['CountryID']}\")'>
-        <td>{$row['CountryID']}</td>
-        <td>{$row['CountryCode']}</td>
-        <td>{$row['CountryName']}</td>
-    </tr>";
+                            <td>{$row['CountryID']}</td>
+                            <td>{$row['CountryCode']}</td>
+                            <td>{$row['CountryName']}</td>
+                        </tr>";
                 }
 
                 echo "</table>";
@@ -1173,8 +1341,8 @@
         
         
         <div id="insertCountryPopup" class="popup">
-    <div class="popup-content">
-        <form action="countrymaster.php" method="post">
+            <div class="popup-content">
+                <form action="countrymaster.php" method="post">
             <label for="countryID">Country ID</label>
             <input type="text" id="countryID" name="countryID"> <br>
 
@@ -1303,13 +1471,190 @@
 
 
         function packagemaster() {
+            const packagemaster = `
+        <div id="packagemaster">
+            <h2><b>Package List</b></h2>
+            <div class="commontable">
+            <?php
+                $servername = "localhost";
+                $username = "root";
+                $password = "";
+                $dbname = "menu";
 
+                $conn = new mysqli($servername, $username, $password, $dbname);
+
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+
+                $sql = "SELECT PlanID, PlanCode, PlanDescription FROM planmaster";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    echo "<table id='planTable'> 
+                            <tr>
+                                <th>Plan ID</th>
+                                <th>Plan Code</th>
+                                <th>Plan Description</th>
+                            </tr>";
+
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr data-planid=\'{$row['PlanID']}' data-plancode='{$row['PlanCode']}' data-plandescription='{$row['PlanDescription']}' onclick='highlightPlanRow(\"{$row['PlanID']}\")\'>
+                                <td>{$row['PlanID']}</td>
+                                <td>{$row['PlanCode']}</td>
+                                <td>{$row['PlanDescription']}</td>
+                            </tr>";
+                    }
+
+                    echo "</table>";
+                } else {
+                    echo "No records found";
+                }
+
+                $conn->close();
+                ?>
+       
+            <div class="button-container">
+                <button onclick="showInsertPlanPopup()">Insert</button>
+                <button onclick="showModifyPlanPopup()">Modify</button>
+                <button onclick="deletePlan()">Delete</button>
+                <button onclick="viewPlan()">View</button>
+                <button onclick="closePlan()">Close</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="insertPlanPopup" class="popup">
+            <div class="popup-content">
+                <form action="planmaster.php" method="post">
+                    <label for="planID">Plan ID</label>
+                    <input type="text" id="planID" name="planID"> <br>
+
+                    <label for="planCode">Plan Code</label>
+                    <input type="text" id="planCode" name="planCode"> <br>
+
+                    <label for="planDescription">Plan Description</label>
+                    <input type="text" id="planDescription" name="planDescription"> <br>
+
+                    <button type="submit" name="submit">Submit</button>
+                    <button type="button" onclick="closeInsertPlanPopup()">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="modifyPlanPopup" class="popup">
+            <div class="popup-content">
+                <form action="planmaster.php" method="post">
+                    <label for="modifyPlanID">Plan ID</label>
+                    <input type="text" id="modifyPlanID" name="modifyPlanID"> <br>
+
+                    <label for="modifyPlanCode">Plan Code</label>
+                    <input type="text" id="modifyPlanCode" name="modifyPlanCode"> <br>
+
+                    <label for="modifyPlanDescription"> Plan Description</label>
+                    <input type="text" id="modifyPlanDescription" name="modifyPlanDescription"> <br>
+
+                    <button type="submit" name="modify" value="modify">Update</button>
+                    <button type="button" onclick="closeModifyPlanPopup()">Cancel</button>
+                </form>
+            </div>
+        </div>
+    `;
+            document.getElementById('output').innerHTML = packagemaster;
         }
+
+
+        function highlightPlanRow(planId) {
+            var rows = document.querySelectorAll("#planTable tr");
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].classList.remove("selected");
+            }
+
+            var selectedRow = document.querySelector("tr[data-planid='" + planId + "']");
+            if (selectedRow) {
+                selectedRow.classList.add("selected");
+            }
+        }
+
+        function showInsertPlanPopup() {
+            document.getElementById('insertPlanPopup').style.display = 'block';
+        }
+
+        function closeInsertPlanPopup() {
+            document.getElementById('insertPlanPopup').style.display = 'none';
+        }
+
+        function showModifyPlanPopup() {
+            var selectedRow = document.querySelector("#planTable tr.selected");
+            if (selectedRow) {
+                var planId = selectedRow.getAttribute('data-planid');
+                var planDescription = selectedRow.cells[2].innerText;
+                var planCode = selectedRow.cells[1].innerText;
+
+                document.getElementById('modifyPlanID').value = planId;
+                document.getElementById('modifyPlanDescription').value = planDescription;
+                document.getElementById('modifyPlanCode').value = planCode;
+
+                document.getElementById('modifyPlanPopup').style.display = 'block';
+            } else {
+                alert('Please select a plan to modify.');
+            }
+        }
+
+        function closeModifyPlanPopup() {
+            document.getElementById('modifyPlanPopup').style.display = 'none';
+        }
+
+        function deletePlan() {
+            var selectedRow = document.querySelector("#planTable tr.selected");
+            if (selectedRow) {
+                var planId = selectedRow.getAttribute('data-planid');
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            selectedRow.remove();
+                        } else {
+                            alert("Failed to delete the row. Please try again.");
+                        }
+                    }
+                };
+
+                xhttp.open("POST", "plandelete.php", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("planID=" + encodeURIComponent(planId));
+            } else {
+                alert("Please select a row to delete.");
+            }
+        }
+
+        function viewPlan() {
+            var selectedRow = document.querySelector("#planTable tr.selected");
+
+            if (selectedRow) {
+                var planId = selectedRow.getAttribute('data-planid');
+                var planDescription = selectedRow.cells[2].textContent;
+                var planCode = selectedRow.cells[1].textContent;
+
+                var details = "Plan ID: " + planId + "\n Plan Description: " + planDescription + "\nPlan Code: " + planCode;
+                alert(details);
+            } else {
+                alert("Please select a row to view details.");
+            }
+        }
+
+        function closePlan() {
+            window.location.href = '';
+        }
+
+
+
 
         function CGSTandSGST() {
 
         }
-        // function roomtypemaster() {}
+
         // function categorymaster() {}
     </script>
 

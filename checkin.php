@@ -105,17 +105,19 @@
                     <div class="checkincontainer">
                         <label for="guesttitle"><b>Guest Title</b></label>
                         <select id="guesttitle" name="guestTitle" value="<?php echo isset($guestTitle) ? $guestTitle : ""; ?>">
-                            <option value="Mr">Mr.</option>
-                            <option value="Ms">Ms.</option>
-                            <option value="Miss">Miss.</option>
+                            <option value=" "> </option>
+                            <option value="Mr" <?php if (isset($guestTitle) && $guestTitle == "Mr") echo "selected"; ?>>Mr.</option>
+                            <option value="Ms" <?php if (isset($guestTitle) && $guestTitle == "Ms") echo "selected"; ?>>Ms.</option>
+                            <option value="Miss" <?php if (isset($guestTitle) && $guestTitle == "Miss") echo "selected"; ?>>Miss.</option>
                         </select><br>
                         <label for="guestName"><b>Guest Name</b></label>
                         <input type="text" id="guestName" name="guestName" placeholder="Guest Name" value="<?php echo isset($guestName) ? $guestName : ""; ?>"> <br>
                         <label for="gender"><b>Gender</b></label>
                         <select id="gender" name="gender" value="<?php echo isset($gender) ? $gender : ""; ?>">
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
+                            <option value=" "> </option>
+                            <option value="male" <?php if (isset($gender) && $gender == "male") echo "selected"; ?>>Male</option>
+                            <option value="female" <?php if (isset($gender) && $gender == "female") echo "selected"; ?>>Female</option>
+                            <option value="other" <?php if (isset($gender) && $gender == "other") echo "selected"; ?>>Other</option>
                         </select><br>
                         <label for="number"><b>Contact Number</b> </label>
                         <input type="number" id="number" name="number" placeholder="Contact Number" value="<?php echo isset($number) ? $number : ""; ?>"> <br>
@@ -129,10 +131,11 @@
                         <input type="number" id="pincode" name="pincode" placeholder="Pin Code" value="<?php echo isset($pincode) ? $pincode : ""; ?>"> <br>
                         <label for="idproof"><b>ID Proof</b></label>
                         <select id="idproof" name="idproof" onchange="showIdProofDetails()" value="<?php echo $idProof; ?>">
-                            <option value="adharcard">Adhar Card</option>
-                            <option value="pancard">Pan Card</option>
-                            <option value="drivinglicense">Driving License</option>
-                            <option value="passport">Passport</option>
+                            <option value=" "> </option>
+                            <option value="adharcard" <?php if (isset($idProof) && $idProof == "adharcard") echo "selected"; ?>>Adhar Card</option>
+                            <option value="pancard" <?php if (isset($idProof) && $idProof == "pancard") echo "selected"; ?>>Pan Card</option>
+                            <option value="drivinglicense" <?php if (isset($idProof) && $idProof == "drivinglicense") echo "selected"; ?>>Driving License</option>
+                            <option value="passport" <?php if (isset($idProof) && $idProof == "passport") echo "selected"; ?>>Passport</option>
                         </select><br>
 
                         <div id="adharcardDetails" style="display:none;">
@@ -170,34 +173,37 @@
                     <div class="roominbx1">
                         <label for="roomtype"><b>Room Type</b></label>
                         <select id="roomtype" name="roomtype" value="<?php echo isset($roomType) ? $roomType : ""; ?>">
-                            <option value="single room ac">Single Room AC</option>
-                            <option value="double room ac">Double Room AC</option>
-                            <option value="deluxe room ac">Deluxe Room </option>
-                            <option value="executive room ac">Executive Suite </option>
-                            <option value="president suite ac">Presidential Suite </option>
-                            <option value="single room non-ac">Single Room NON AC</option>
-                            <option value="double room non-ac">Double Room NON AC</option>
+                            <option value=" "> </option>
+                            <option value="single room ac" <?php if (isset($roomType) && $roomType == "single room ac") echo "selected"; ?>>Single Room AC</option>
+                            <option value="double room ac" <?php if (isset($roomType) && $roomType == "double room ac") echo "selected"; ?>>Double Room AC</option>
+                            <option value="deluxe room ac" <?php if (isset($roomType) && $roomType == "deluxe room ac") echo "selected"; ?>>Deluxe Room</option>
+                            <option value="executive room ac" <?php if (isset($roomType) && $roomType == "executive room ac") echo "selected"; ?>>Executive Suite</option>
+                            <option value="president suite ac" <?php if (isset($roomType) && $roomType == "president suite ac") echo "selected"; ?>>Presidential Suite</option>
+                            <option value="single room non-ac" <?php if (isset($roomType) && $roomType == "single room non-ac") echo "selected"; ?>>Single Room NON AC</option>
+                            <option value="double room non-ac" <?php if (isset($roomType) && $roomType == "double room non-ac") echo "selected"; ?>>Double Room NON AC</option>
                         </select><br>
                         <label for="roomumber"><b>Room No.</b></label>
                         <select id="room" name="room" value="<?php echo isset($roomNumber) ? $roomNumber : ""; ?>">
-                            <option value="101">101</option>
-                            <option value="102">102</option>
-                            <option value="103">103</option>
-                            <option value="104">104</option>
-                            <option value="105">105</option>
-                            <option value="106">106</option>
-                            <option value="107">107</option>
-                            <option value="108">108</option>
-                            <option value="109">109</option>
-                            <option value="110">110</option>
+                            <option value=" "> </option>
+                            <option value="101" <?php if (isset($roomNumber) && $roomNumber == "101") echo "selected"; ?>>101</option>
+                            <option value="102" <?php if (isset($roomNumber) && $roomNumber == "102") echo "selected"; ?>>102</option>
+                            <option value="103" <?php if (isset($roomNumber) && $roomNumber == "103") echo "selected"; ?>>103</option>
+                            <option value="104" <?php if (isset($roomNumber) && $roomNumber == "104") echo "selected"; ?>>104</option>
+                            <option value="105" <?php if (isset($roomNumber) && $roomNumber == "105") echo "selected"; ?>>105</option>
+                            <option value="106" <?php if (isset($roomNumber) && $roomNumber == "106") echo "selected"; ?>>106</option>
+                            <option value="107" <?php if (isset($roomNumber) && $roomNumber == "107") echo "selected"; ?>>107</option>
+                            <option value="108" <?php if (isset($roomNumber) && $roomNumber == "108") echo "selected"; ?>>108</option>
+                            <option value="109" <?php if (isset($roomNumber) && $roomNumber == "109") echo "selected"; ?>>109</option>
+                            <option value="110" <?php if (isset($roomNumber) && $roomNumber == "110") echo "selected"; ?>>110</option>
                         </select><br>
                         <label for="plan"><b>Plan</b></label>
                         <select id="plan" name="plan" value="<?php echo isset($plan) ? $plan : ""; ?>">
-                            <option value="ep">EP</option>
-                            <option value="map">MAP</option>
-                            <option value="ap">AP</option>
-                            <option value="full board">Full Board</option>
-                            <option value="room only">Room Only</option>
+                            <option value=" "> </option>
+                            <option value="ep" <?php if (isset($plan) && $plan == "ep") echo "selected"; ?>>EP</option>
+                            <option value="map" <?php if (isset($plan) && $plan == "map") echo "selected"; ?>>MAP</option>
+                            <option value="ap" <?php if (isset($plan) && $plan == "ap") echo "selected"; ?>>AP</option>
+                            <option value="full board" <?php if (isset($plan) && $plan == "full board") echo "selected"; ?>>Full Board</option>
+                            <option value="room only" <?php if (isset($plan) && $plan == "room only") echo "selected"; ?>>Room Only</option>
                         </select><br>
                     </div>
                 </div>
@@ -206,10 +212,11 @@
                     <div class="checkincontainer">
                         <label for="billinstruction"><b>Billing Instruction</b></label>
                         <select id="billinstruction" name="billinstruction" value="<?php echo isset($billingInstruction) ? $billingInstruction : ""; ?>">
-                            <option value="buildtocompany">Build to Company</option>
-                            <option value="directpaymentbyguest">Direct Payment by Guest</option>
-                            <option value="guestroomterif+foodfromcompany">Guest Room Terif + Food From Company</option>
-                            <option value="companyroomterif+foodbyself">Company Room Terif + Food By Self</option>
+                            <option value=" "> </option>
+                            <option value="buildtocompany" <?php if (isset($billingInstruction) && $billingInstruction == "buildtocompany") echo "selected"; ?>>Build to Company</option>
+                            <option value="directpaymentbyguest" <?php if (isset($billingInstruction) && $billingInstruction == "directpaymentbyguest") echo "selected"; ?>>Direct Payment by Guest</option>
+                            <option value="guestroomterif+foodfromcompany" <?php if (isset($billingInstruction) && $billingInstruction == "guestroomterif+foodfromcompany") echo "selected"; ?>>Guest Room Terif + Food From Company</option>
+                            <option value="companyroomterif+foodbyself" <?php if (isset($billingInstruction) && $billingInstruction == "companyroomterif+foodbyself") echo "selected"; ?>>Company Room Terif + Food By Self</option>
                         </select><br>
                         <label for="discount"><b>Discount (%)</b></label>
                         <input type="number" id="discount" name="discount" placeholder="Discount Percentage" oninput="calculateTaxes()" value="<?php echo isset($discount) ? $discount : ""; ?>"><br>
@@ -241,10 +248,11 @@
                     <div class="checkincontainer">
                         <label for="paymentMode"><b>Payment Mode</b></label>
                         <select id="paymentMode" name="paymentMode" onchange="showPaymentDetails()" value="<?php echo isset($paymentMode) ? $paymentMode : ""; ?>">
-                            <option value="cash">Cash</option>
-                            <option value="debit">Debit Card</option>
-                            <option value="credit">Credit Card</option>
-                            <option value="upi">UPI</option>
+                            <option value=" "> </option>
+                            <option value="cash" <?php if (isset($paymentMode) && $paymentMode == "cash") echo "selected"; ?>>Cash</option>
+                            <option value="debit" <?php if (isset($paymentMode) && $paymentMode == "debit") echo "selected"; ?>>Debit Card</option>
+                            <option value="credit" <?php if (isset($paymentMode) && $paymentMode == "credit") echo "selected"; ?>>Credit Card</option>
+                            <option value="upi" <?php if (isset($paymentMode) && $paymentMode == "upi") echo "selected"; ?>>UPI</option>
                         </select><br>
 
                         <div id="debitCardDetails" style="display:none;">
@@ -262,10 +270,11 @@
                         <div id="creditCardDetails" style="display:none;">
                             <label for="creditCardType"><b>Card Type</b></label>
                             <select id="creditCardType" name="creditCardType" value="<?php echo isset($creditCardType) ? $$creditCardType : ""; ?>">
-                                <option value="visa">Visa</option>
-                                <option value="rupay">RuPay</option>
-                                <option value="mastercard">MasterCard</option>
-                                <option value="amex">American Express</option>
+                                <option value=" "> </option>
+                                <option value="visa" <?php if (isset($creditCardType) && $creditCardType == "visa") echo "selected"; ?>>Visa</option>
+                                <option value="rupay" <?php if (isset($creditCardType) && $creditCardType == "rupay") echo "selected"; ?>>RuPay</option>
+                                <option value="mastercard" <?php if (isset($creditCardType) && $creditCardType == "mastercard") echo "selected"; ?>>MasterCard</option>
+                                <option value="amex" <?php if (isset($creditCardType) && $creditCardType == "amex") echo "selected"; ?>>American Express</option>
                             </select><br>
                             <label for="creditCardNumber"><b>Credit Card Number</b></label>
                             <input type="text" id="creditCardNumber" name="creditCardNumber" placeholder="Enter Credit Card Number" value="<?php echo isset($creditCardNumber) ? $creditCardNumber : ""; ?>"><br>
