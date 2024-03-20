@@ -1466,10 +1466,6 @@
         }
 
 
-
-
-
-
         function packagemaster() {
             const packagemaster = `
         <div id="packagemaster">
