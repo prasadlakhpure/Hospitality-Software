@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reservation System</title>
     <link rel="stylesheet" href="style11.css">
     <style>
@@ -39,7 +39,6 @@
 
         .navbar {
             background-color: #2980b9;
-            /* Updated navbar color */
             text-align: center;
             width: 100%;
             padding-bottom: 10px;

@@ -32,26 +32,43 @@
             margin: 0 10px;
         }
 
-        .date-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
+        .navbar input[type="date"] {
+            width: 150px;
         }
 
-        .date-box {
-            flex: 0 0 100px;
+        .date-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .date-table th,
+        .date-table td {
             border: 1px solid black;
             padding: 10px;
-            margin: 5px;
             text-align: center;
-            white-space: nowrap; 
+        }
+
+        .date-table th {
+            background-color: #f2f2f2;
+        }
+
+        .date-controls {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .date-controls button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
     <div id="sidebar"></div>
-
     <div class="container">
         <h1>Occupancy</h1>
         <div class="navbar">
@@ -59,11 +76,23 @@
             <input type="date" id="start_date">
             <label for="end_date">To</label>
             <input type="date" id="end_date">
+
+            <div class="date-controls">
+                <button id="registerButton">Register</button>
+                <button id="closeButton">Close</button>
+            </div>
         </div>
 
-        <div class="date-container" id="date_container">
-            <!-- Dates will be dynamically populated here -->
-        </div>
+        <table class="date-table">
+            <thead>
+                <tr>
+                    <th>Room Type</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody id="date_container">
+            </tbody>
+        </table>
     </div>
 
     <script>
@@ -81,32 +110,78 @@
                 return;
             }
 
+            const headerRow = document.querySelector('.date-table thead tr');
+            const tbody = document.querySelector('.date-table tbody');
+            tbody.innerHTML = '';
+
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
             for (let i = 0; i < 7; i++) {
                 const futureDate = new Date(fromDate);
                 futureDate.setDate(fromDate.getDate() + i);
-                const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][futureDate.getDay()];
+                const dayName = days[futureDate.getDay()];
                 const year = futureDate.getFullYear();
                 const month = String(futureDate.getMonth() + 1).padStart(2, '0');
                 const day = String(futureDate.getDate()).padStart(2, '0');
-                const dateBox = document.createElement('div');
-                dateBox.classList.add('date-box');
-                dateBox.innerHTML = `${dayName} ${day}-${month}-${year}`; // Displaying day and date in one line
-                dateContainer.appendChild(dateBox);
+
+                const th = document.createElement('th');
+                th.innerHTML = `<div>${dayName}</div><div>${day}-${month}-${year}</div>`;
+                headerRow.appendChild(th);
             }
 
             toDateInput.min = fromDateInput.value;
-            toDateInput.value = getDate(7); // Automatically setting the "To" date
+            toDateInput.value = getDate(7);
+
+            populateRoomTypes();
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        function populateRoomTypes() {
+            const roomTypes = ['Single Room Non-AC', 'Double Room Non-AC', 'Single Room AC', 'Double Room AC', 'Deluxe Room AC', 'Executive Room AC', 'President Suite AC'];
+            const tbody = document.getElementById('date_container');
+            const occupancyStatus = ['Reserved', 'Occupied', 'Available'];
+
+            for (let i = 0; i < roomTypes.length; i++) {
+                const roomType = roomTypes[i];
+
+                for (let j = 0; j < 3; j++) {
+                    const row = document.createElement('tr');
+
+                    if (j === 0) {
+                        const roomTypeCell = document.createElement('td');
+                        roomTypeCell.textContent = roomType;
+                        roomTypeCell.rowSpan = 3;
+                        row.appendChild(roomTypeCell);
+                    }
+
+                    const occupancyCell = document.createElement('td');
+                    occupancyCell.textContent = occupancyStatus[j];
+                    row.appendChild(occupancyCell);
+
+                    for (let k = 0; k < 7; k++) {
+                        const emptyCell = document.createElement('td');
+                        row.appendChild(emptyCell);
+                    }
+
+                    tbody.appendChild(row);
+                }
+            }
+        }
+
+        function getDate(days) {
+            const date = new Date();
+            date.setDate(date.getDate() + days);
+            return date.toISOString().split('T')[0];
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
             populateDates();
         });
 
-        document.getElementById('start_date').addEventListener('change', function () {
+        document.getElementById('start_date').addEventListener('change', function() {
             populateDates();
         });
 
-        document.getElementById('end_date').addEventListener('change', function () {
+        document.getElementById('end_date').addEventListener('change', function() {
             document.getElementById('start_date').max = this.value;
         });
 
