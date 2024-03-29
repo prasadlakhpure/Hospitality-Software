@@ -48,25 +48,45 @@
         }
 
         function calculateTaxes() {
-            var roomCharge = parseFloat(document.getElementById('roomCharge').value);
-            var cgstPercentage = parseFloat(document.getElementById('cgst').value);
-            var sgstPercentage = parseFloat(document.getElementById('sgst').value);
-            var discountPercentage = parseFloat(document.getElementById('discount').value);
-            var advance = parseFloat(document.getElementById('advance').value);
+
+            // new code
+            var roomCharge = parseFloat(document.getElementById('roomCharge').value) || 0;
+            var cgstPercentage = parseFloat(document.getElementById('cgst').value) || 0;
+            var sgstPercentage = parseFloat(document.getElementById('sgst').value) || 0;
+            var discountPercentage = parseFloat(document.getElementById('discount').value) || 0;
+            var advance = parseFloat(document.getElementById('advance').value) || 0;
 
             var discountAmount = roomCharge * (discountPercentage / 100);
-            var foodCharge = parseFloat(document.getElementById('foodcharge').value);
+            var foodCharge = parseFloat(document.getElementById('foodcharge').value) || 0;
             var cgstAmount = (roomCharge - discountAmount + foodCharge) * (cgstPercentage / 100);
             var sgstAmount = (roomCharge - discountAmount + foodCharge) * (sgstPercentage / 100);
-            var extraCharge = parseFloat(document.getElementById('extracharge').value);
+            var extraCharge = parseFloat(document.getElementById('extracharge').value) || 0;
 
-            var totalAmount = roomCharge - discountAmount + foodCharge + cgstAmount + sgstAmount + extraCharge -
-                advance;
+            var totalAmount = roomCharge - discountAmount + foodCharge + cgstAmount + sgstAmount + extraCharge - advance;
 
             document.getElementById('discountAmount').value = discountAmount.toFixed(2);
             document.getElementById('cgstAmountInput').value = cgstAmount.toFixed(2);
             document.getElementById('sgstAmountInput').value = sgstAmount.toFixed(2);
             document.getElementById('totalAmountAfterTaxesInput').value = totalAmount.toFixed(2);
+            // var roomCharge = parseFloat(document.getElementById('roomCharge').value);
+            // var cgstPercentage = parseFloat(document.getElementById('cgst').value);
+            // var sgstPercentage = parseFloat(document.getElementById('sgst').value);
+            // var discountPercentage = parseFloat(document.getElementById('discount').value);
+            // var advance = parseFloat(document.getElementById('advance').value);
+
+            // var discountAmount = roomCharge * (discountPercentage / 100);
+            // var foodCharge = parseFloat(document.getElementById('foodcharge').value);
+            // var cgstAmount = (roomCharge - discountAmount + foodCharge) * (cgstPercentage / 100);
+            // var sgstAmount = (roomCharge - discountAmount + foodCharge) * (sgstPercentage / 100);
+            // var extraCharge = parseFloat(document.getElementById('extracharge').value);
+
+            // var totalAmount = roomCharge - discountAmount + foodCharge + cgstAmount + sgstAmount + extraCharge -
+            //     advance;
+
+            // document.getElementById('discountAmount').value = discountAmount.toFixed(2);
+            // document.getElementById('cgstAmountInput').value = cgstAmount.toFixed(2);
+            // document.getElementById('sgstAmountInput').value = sgstAmount.toFixed(2);
+            // document.getElementById('totalAmountAfterTaxesInput').value = totalAmount.toFixed(2);
         }
 
 
@@ -195,6 +215,10 @@
                         <option value="108" <?php if (isset($roomNumber) && $roomNumber == "108") echo "selected"; ?>>108</option>
                         <option value="109" <?php if (isset($roomNumber) && $roomNumber == "109") echo "selected"; ?>>109</option>
                         <option value="110" <?php if (isset($roomNumber) && $roomNumber == "110") echo "selected"; ?>>110</option>
+                        <option value="111" <?php if (isset($roomNumber) && $roomNumber == "111") echo "selected"; ?>>111</option>
+                        <option value="112" <?php if (isset($roomNumber) && $roomNumber == "112") echo "selected"; ?>>112</option>
+                        <option value="113" <?php if (isset($roomNumber) && $roomNumber == "113") echo "selected"; ?>>113</option>
+                        <option value="114" <?php if (isset($roomNumber) && $roomNumber == "114") echo "selected"; ?>>114</option>
                     </select><br>
                     <label for="plan"><b>Plan</b></label>
                     <select id="plan" name="plan" value="<?php echo isset($plan) ? $plan : ""; ?>">
@@ -236,7 +260,9 @@
                     <label for="sgst"><b>SGST %</b></label>
                     <input type="number" id="sgst" name="sgst" placeholder="SGST Percentage" oninput="calculateTaxes()" value="<?php echo isset($sgstPercentage) ? $sgstPercentage : ""; ?>"><br>
                     <label for="discountAmount"><b>Discount Amount</b></label>
-                    <input type="text" name="discountAmount" id="discountAmount" placeholder="Discount Amount" value="<?php echo isset($discountAmount) ? $discountAmount : ""; ?>" readonly><br>
+                    <input type="text" name="discountAmount" id="discountAmount" placeholder="Discount Amount" value="<?php echo isset($discountAmount) && is_numeric($discountAmount) ? $discountAmount : ""; ?>" readonly><br>
+
+
                     <label for="cgstAmountInput"><b>CGST Amount</b></label>
                     <input type="text" name="cgstAmountInput" id="cgstAmountInput" placeholder="CGST Amount" value="<?php echo isset($cgstAmount) ? $cgstAmount : ""; ?>" readonly><br>
                     <label for="sgstAmountInput"><b>SGST Amount</b></label>

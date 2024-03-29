@@ -427,7 +427,7 @@
                     <input type="text" id="roomDescription" name="roomDescription"> <br>
 
                     <button type="submit" name="submit">Submit</button>
-                    <button type="button" onclick="closeInsertRoomPopup()">Cancel</button>
+                    <button type="button" onclick="closeInsertRoomTypePopup()">Cancel</button>
                 </form>
             </div>
         </div>
@@ -442,7 +442,7 @@
                     <input type="text" id="modifyRoomDescription" name="modifyRoomDescription"> <br>
 
                     <button type="submit" name="modify" value="modify">Update</button>
-                    <button type="button" onclick="closeModifyRoomPopup()">Cancel</button>
+                    <button type="button" onclick="closeModifyRoomTypePopup()">Cancel</button>
                 </form>
             </div>
         </div>
