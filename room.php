@@ -126,15 +126,15 @@
 
         $conn->close();
         ?>
-    </div>
-    <div class="content" id="content-master">
-        <div class="navbar">
-            <button onclick="expectedarrival()"><b>Expected Arrival</b></button>
-            <button onclick="reservedregistration()"><b>Reserved Registration</b></button>
-            <button onclick="expecteddeparture()"><b>Expected Departure</b></button>
-            <button onclick="checkIn()"><b>Check-In</b></button>
-        </div>
 
+        <div class="content" id="content-master">
+            <div class="navbar">
+                <button onclick="expectedarrival()"><b>Expected Arrival</b></button>
+                <button onclick="reservedregistration()"><b>Reserved Registration</b></button>
+                <button onclick="expecteddeparture()"><b>Expected Departure</b></button>
+                <button onclick="checkIn()"><b>Check-In</b></button>
+            </div>
+        </div>
     </div>
 
     <script>
