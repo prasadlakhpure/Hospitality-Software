@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,z initial-scale=1.0">
     <title>Reservation System</title>
     <link rel="stylesheet" href="style11.css">
     <style>
@@ -77,31 +77,24 @@
 
 <body>
     <div id="sidebar"></div>
-    <div class="content" id="content-master">
-        <div class="navbar">
-            <h1><b>Room Reservation</b></h1>
-            <button onclick="expectedarrival()"><b>Expected Arrival</b></button>
-            <button onclick="reservedregistration()"><b>Reserved Registration</b></button>
-            <button onclick="expecteddeparture()"><b>Expected Departure</b></button>
-        </div>
-        <div id="container">
-            <?php
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "menu";
+    <div id="container">
+        <?php
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "menu";
 
-            $conn = new mysqli($servername, $username, $password, $dbname);
+        $conn = new mysqli($servername, $username, $password, $dbname);
 
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
 
-            $sql = "SELECT id, guestTitle, guestName, companyName, checkInDate, checkOutDate, roomType, roomNumber, advance FROM booking";
-            $result = $conn->query($sql);
+        $sql = "SELECT id, guestTitle, guestName, companyName, checkInDate, checkOutDate, roomType, roomNumber, advance FROM booking";
+        $result = $conn->query($sql);
 
-            if ($result->num_rows > 0) {
-                echo "<table>
+        if ($result->num_rows > 0) {
+            echo "<table>
             <tr>
                 <th>ID</th>
                 <th>Room Number</th> 
@@ -113,8 +106,8 @@
                 <th>Company Name</th>    
             </tr>";
 
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr>
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>
                 <td>{$row['id']}</td>
                 <td>{$row['roomNumber']}</td>
                 <td>{$row['roomType']}</td> 
@@ -124,17 +117,24 @@
                 <td>{$row['checkOutDate']}</td>
                 <td>{$row['companyName']}</td>
               </tr>";
-                }
-
-                echo "</table>";
-            } else {
-                echo "No records found";
             }
 
-            $conn->close();
-            ?>
+            echo "</table>";
+        } else {
+            echo "No records found";
+        }
 
+        $conn->close();
+        ?>
+    </div>
+    <div class="content" id="content-master">
+        <div class="navbar">
+            <button onclick="expectedarrival()"><b>Expected Arrival</b></button>
+            <button onclick="reservedregistration()"><b>Reserved Registration</b></button>
+            <button onclick="expecteddeparture()"><b>Expected Departure</b></button>
+            <button onclick="checkIn()"><b>Check-In</b></button>
         </div>
+
     </div>
 
     <script>
@@ -199,6 +199,28 @@
                     rows[i].style.display = "none";
                 }
             }
+        }
+
+        function checkIn() {
+            var table = document.querySelector("table");
+            var rows = table.querySelectorAll("tr");
+
+            for (var i = 1; i < rows.length; i++) {
+                var cells = rows[i].querySelectorAll("td");
+                var checkInDate = cells[5].textContent;
+
+                // Check if check-in date is today or in the past (already checked-in)
+                var currentDate = new Date();
+                var checkInDateTime = new Date(checkInDate);
+                if (checkInDateTime <= currentDate) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+
+            // Redirect to checkin.php after processing
+            window.location.href = 'checkin.php';
         }
     </script>
 

@@ -210,9 +210,7 @@
                 }
             }
 
-
-
-            function addFunction() {
+            function addFunction() {            
                 window.location.href = 'booking.php';
             }
 
