@@ -171,7 +171,6 @@
                 var checkInDate = cells[5].textContent;
                 var checkOutDate = cells[6].textContent;
 
-                // Check if check-in date is in the future (reserved registration)
                 var currentDate = new Date();
                 var checkInDateTime = new Date(checkInDate);
                 if (checkInDateTime > currentDate) {
@@ -190,7 +189,6 @@
                 var cells = rows[i].querySelectorAll("td");
                 var checkOutDate = cells[6].textContent;
 
-                // Check if check-out date is in the future (expected departure)
                 var currentDate = new Date();
                 var checkOutDateTime = new Date(checkOutDate);
                 if (checkOutDateTime > currentDate) {
@@ -209,7 +207,6 @@
                 var cells = rows[i].querySelectorAll("td");
                 var checkInDate = cells[5].textContent;
 
-                // Check if check-in date is today or in the past (already checked-in)
                 var currentDate = new Date();
                 var checkInDateTime = new Date(checkInDate);
                 if (checkInDateTime <= currentDate) {
@@ -219,7 +216,6 @@
                 }
             }
 
-            // Redirect to checkin.php after processing
             window.location.href = 'checkin.php';
         }
     </script>
