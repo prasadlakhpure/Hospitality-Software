@@ -193,7 +193,7 @@
                     <button onclick="showModifyPopup()">Modify</button>
                     <button onclick="deleteRow()">Delete</button>
                     <button onclick="view()">View</button>
-                    <button onclick="closeRoomDescription()">Close</button>
+                    <button onclick="closeroomdescription()">Close</button>
                 </div>
             </div>
         </div>
@@ -210,8 +210,8 @@
                 <label for="roomDescription">Room Description</label>
                 <input type="text" id="roomDescription" name="roomDescription"> <br>
 
-                <button onclick="insert()" name="submit" value="submit">Submit</button>
-                <button onclick="closeInsertPopup()">Cancel</button>
+                <button type="submit" name="submit">Submit</button>
+                <button type="button" onclick="closeInsertPopup()">Cancel</button>
               </form>
             </div>
         </div>
@@ -228,8 +228,8 @@
               <label for="modifyRoomDescription">Room Description</label>
               <input type="text" id="modifyRoomDescription" name="modifyRoomDescription"> <br>
 
-              <button onclick="update()" name="submit" value="submit">Update</button>
-              <button onclick="closeModifyPopup()">Cancel</button>
+              <button type="submit" name="submit" value="modify">Update</button>
+              <button type= "button" onclick="closeModifyPopup()">Cancel</button>
              </form>
            </div>
         </div>
@@ -359,7 +359,7 @@
             }
         }
 
-        function closeRoomDescription() {
+        function closeroomdescription() {
             window.location.href = ' ';
         }
 
@@ -618,8 +618,9 @@
 
              <label for="modifyBillDescription">Bill Description</label>
              <input type="text" id="modifyBillDescription" name="modifyBillDescription"> <br>
-            <button type="submit" name="modify" value="modify">Update</button>
-            <button type="button" onclick="closeModifyBillPopup()">Cancel</button>
+            
+             <button type="submit" name="modify" value="modify">Update</button>
+             <button type="button" onclick="closeModifyBillPopup()">Cancel</button>
         </form>
     </div>
 </div>
