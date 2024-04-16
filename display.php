@@ -210,7 +210,7 @@
                 }
             }
 
-            function addFunction() {            
+            function addFunction() {
                 window.location.href = 'booking.php';
             }
 
@@ -253,31 +253,22 @@
                 }
             }
 
+
+
+            
+
             function checkinFunction() {
                 var selectedRow = document.querySelector("table tr.selected");
+
                 if (selectedRow) {
                     var rowId = selectedRow.cells[0].innerText;
 
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function() {
-                        if (this.readyState == 4) {
-                            if (this.status == 200) {
-
-                                var rowData = JSON.parse(this.responseText);
-
-                                window.location.href = 'checkin.php?id=' + rowId + '&data=' + encodeURIComponent(JSON.stringify(rowData));
-                            } else {
-                                alert("Failed to fetch data. Please try again.");
-                            }
-                        }
-                    };
-
-                    xhttp.open("POST", 'update.php?id=' + rowId, true);
-                    xhttp.send();
+                    window.location.href = 'check.php?id=' + rowId;
                 } else {
-                    alert("Please select a row to check in.");
+                    alert("Please select a row to update.");
                 }
             }
+
 
             document.addEventListener("DOMContentLoaded", function() {
                 var table = document.querySelector("table");
