@@ -36,6 +36,11 @@
             width: 150px;
         }
 
+
+        .navbar button {
+            margin-left: 20px;
+        }
+
         .date-table {
             border-collapse: collapse;
             width: 100%;
@@ -76,18 +81,15 @@
             <input type="date" id="start_date">
             <label for="end_date">To</label>
             <input type="date" id="end_date">
-
-            <div class="date-controls">
-                <button id="registerButton">Register</button>
-                <button id="closeButton">Close</button>
-            </div>
+            <button id="registeration">Registration</button>
+            <button id="closeButton">Close</button>
         </div>
 
         <table class="date-table">
             <thead>
                 <tr>
                     <th>Room Type</th>
-                    <th> </th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="date_container">
@@ -198,7 +200,6 @@
 
         includeContent('menu.html', 'sidebar');
     </script>
-
 </body>
 
 </html>
