@@ -1,31 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Check-Out</title>
     <link rel="stylesheet" href="./style11.css">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            margin-top: 20px;
-        }
-
         #container {
             padding: 20px;
-            max-width: 1200px;
             background-color: #ffffff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             width: 90%;
@@ -36,7 +19,8 @@
             border-collapse: collapse;
         }
 
-        #container th, #container td {
+        #container th,
+        #container td {
             border: 1px solid #ddd;
             padding: 12px;
             text-align: left;
@@ -87,9 +71,10 @@
         }
     </style>
 </head>
+
 <body>
     <div id="sidebar"></div>
-    <div class="main-content">
+    <div class="content" id="content-master">
         <div id="container">
             <?php
             $servername = "localhost";
@@ -152,14 +137,15 @@
             fetch(url)
                 .then(response => response.text())
                 .then(data => {
-                document.getElementById(targetId).innerHTML = data;
-            })
-            .catch(error => {
-                console.error('Error loading content:', error);
-            });
+                    document.getElementById(targetId).innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading content:', error);
+                });
         }
         includeContent('menu.html', 'sidebar');
     </script>
 
 </body>
+
 </html>
