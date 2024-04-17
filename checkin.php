@@ -5,11 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reservation System</title>
-    <link rel="stylesheet" href="style11.css">
     <style>
         #container {
-            margin: 0px auto;
-            padding: 0px 20px 20px 20px;
+            margin: 0 auto;
+            padding: 20px;
             max-width: 1200px;
         }
 
@@ -21,15 +20,14 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        th,
-        td {
+        th, td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
         }
 
         th {
-            background-color: #333333;
+            background-color: #333;
             color: #fff;
         }
 
@@ -40,8 +38,7 @@
         .navbar {
             background-color: #2980b9;
             text-align: center;
-            width: 100%;
-            padding-bottom: 10px;
+            padding: 10px 0;
         }
 
         .navbar button {
@@ -60,14 +57,6 @@
             background-color: #1a252f;
         }
 
-        .navbar input[type="date"] {
-            padding: 10px;
-            font-size: 16px;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
         .selected {
             background-color: #3498db !important;
             color: #fff;
@@ -77,14 +66,12 @@
 
 <body>
     <div id="sidebar"></div>
-    <div id="container" id="content-checkin">
-        <div class="content" id="content-master">
-            <div class="navbar">
-                <button onclick="expectedarrival()"><b>Expected Arrival</b></button>
-                <button onclick="reservedregistration()"><b>Reserved Registration</b></button>
-                <button onclick="expecteddeparture()"><b>Expected Departure</b></button>
-                <button onclick="checkIn()"><b>Check-In</b></button>
-            </div>
+    <div id="container">
+        <div class="navbar">
+            <button onclick="expectedArrival()"><b>Expected Arrival</b></button>
+            <button onclick="reservedRegistration()"><b>Reserved Registration</b></button>
+            <button onclick="expectedDeparture()"><b>Expected Departure</b></button>
+            <button onclick="checkIn()"><b>Check-In</b></button>
         </div>
         <?php
         $servername = "localhost";
@@ -92,134 +79,108 @@
         $password = "";
         $dbname = "menu";
 
+        // Database connection
         $conn = new mysqli($servername, $username, $password, $dbname);
 
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         }
 
-        $sql = "SELECT id, guestTitle, guestName, companyName, checkInDate, checkOutDate, roomType, roomNumber, advance FROM booking";
+        $sql = "SELECT id, guestTitle, guestName, companyName, checkInDate, checkOutDate, roomType, roomNumber FROM booking";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
-            echo "<table>
-            <tr>
+            echo "<table><tr>
                 <th>ID</th>
-                <th>Room Number</th> 
-                <th>Room Type</th>                          
+                <th>Room Number</th>
+                <th>Room Type</th>
                 <th>Guest Title</th>
-                <th>Guest Name</th>                
+                <th>Guest Name</th>
                 <th>Check-In Date</th>
                 <th>Check-Out Date</th>
-                <th>Company Name</th>    
+                <th>Company Name</th>
             </tr>";
-
             while ($row = $result->fetch_assoc()) {
-                echo "<tr>
+                echo "<tr data-id='{$row['id']}'>
                 <td>{$row['id']}</td>
                 <td>{$row['roomNumber']}</td>
-                <td>{$row['roomType']}</td> 
+                <td>{$row['roomType']}</td>
                 <td>{$row['guestTitle']}</td>
-                <td>{$row['guestName']}</td>                   
-                <td>{$row['checkInDate']}</td>               
+                <td>{$row['guestName']}</td>
+                <td>{$row['checkInDate']}</td>
                 <td>{$row['checkOutDate']}</td>
                 <td>{$row['companyName']}</td>
-              </tr>";
+                </tr>";
             }
-
             echo "</table>";
         } else {
             echo "No records found";
         }
-
         $conn->close();
         ?>
-
-
     </div>
 
     <script>
-        function includeContent(url, targetId) {
-            fetch(url)
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById(targetId).innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Error loading content:', error);
-                });
-        }
-        includeContent('menu.html', 'sidebar');
-
-
-
         document.addEventListener('DOMContentLoaded', function() {
-            var table = document.querySelector("table");
-            var rows = table.querySelectorAll("tr");
-
-            // Add click event listener to each row
-            rows.forEach(function(row) {
-                row.addEventListener('click', function() {
-                    // Toggle the 'selected' class for the clicked row
-                    this.classList.toggle('selected');
+            var buttons = document.querySelectorAll('.navbar button');
+            buttons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    buttons.forEach(btn => btn.classList.remove('selected'));
+                    this.classList.add('selected');
                 });
             });
         });
 
-
-        function expectedarrival() {
-
-            var table = document.querySelector("table");
-            var rows = table.querySelectorAll("tr");
-
-            for (var i = 1; i < rows.length; i++) {
-                rows[i].style.display = "";
-            }
+        function filterRows(columnIndex, condition) {
+            var rows = document.querySelectorAll("table tr:not(:first-child)");
+            rows.forEach(function(row) {
+                var date = new Date(row.cells[columnIndex].textContent);
+                row.style.display = condition(date) ? "" : "none";
+            });
         }
 
+        function expectedArrival() {
+            filterRows(5, date => date.toISOString().split('T')[0] === new Date().toISOString().split('T')[0]);
+        }
 
-        function reservedregistration() {
-            var table = document.querySelector("table");
-            var rows = table.querySelectorAll("tr");
+        function reservedRegistration() {
+            filterRows(5, date => date.toISOString().split('T')[0] > new Date().toISOString().split('T')[0]);
+        }
 
-            for (var i = 1; i < rows.length; i++) {
-                var cells = rows[i].querySelectorAll("td");
-                var checkInDate = cells[5].textContent;
-                var checkOutDate = cells[6].textContent;
+        function expectedDeparture() {
+            filterRows(6, date => date.toISOString().split('T')[0] >= new Date().toISOString().split('T')[0]);
+        }
 
-                var currentDate = new Date();
-                var checkInDateTime = new Date(checkInDate);
-                if (checkInDateTime > currentDate) {
-                    rows[i].style.display = "";
-                } else {
-                    rows[i].style.display = "none";
+        function checkIn() {
+            var rows = document.querySelectorAll("table tr:not(:first-child)");
+            var found = Array.from(rows).some(row => {
+                if (new Date(row.cells[5].textContent).toISOString().split('T')[0] === new Date().toISOString().split('T')[0]) {
+                    redirectToCheckPage(row);
+                    return true;
                 }
+            });
+
+            if (!found) {
+                alert("No check-ins for today found.");
             }
         }
 
-        function expecteddeparture() {
-            var table = document.querySelector("table");
-            var rows = table.querySelectorAll("tr");
-
-            for (var i = 1; i < rows.length; i++) {
-                var cells = rows[i].querySelectorAll("td");
-                var checkOutDate = cells[6].textContent;
-
-                var currentDate = new Date();
-                var checkOutDateTime = new Date(checkOutDate);
-                if (checkOutDateTime > currentDate) {
-                    rows[i].style.display = "";
-                } else {
-                    rows[i].style.display = "none";
-                }
-            }
+        function redirectToCheckPage(row) {
+            const id = row.getAttribute('data-id');
+            window.location.href = `check.php?id=${id}`;
         }
 
-        
+        function includeContent(url, targetId) {
+            fetch(url).then(response => response.text())
+            .then(html => {
+                document.getElementById(targetId).innerHTML = html;
+            }).catch(error => {
+                console.error('Error loading the sidebar:', error);
+            });
+        }
 
-        
+        includeContent('menu.html', 'sidebar');
     </script>
-
 </body>
 
 </html>
