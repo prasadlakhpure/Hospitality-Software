@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,59 +10,46 @@
             margin: 0;
             padding: 0;
         }
-
         h1 {
             text-align: center;
         }
-
         .container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 20px;
         }
-
         .navbar {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
         }
-
         .navbar label {
             margin: 0 10px;
         }
-
         .navbar input[type="date"] {
             width: 150px;
         }
-
-
         .navbar button {
             margin-left: 20px;
         }
-
         .date-table {
             border-collapse: collapse;
             width: 100%;
             margin-top: 20px;
         }
-
-        .date-table th,
-        .date-table td {
+        .date-table th, .date-table td {
             border: 1px solid black;
             padding: 10px;
             text-align: center;
         }
-
         .date-table th {
             background-color: #f2f2f2;
         }
-
         .date-controls {
             display: flex;
             align-items: center;
             margin-left: auto;
         }
-
         .date-controls button {
             margin-left: 10px;
             padding: 8px 12px;
@@ -71,7 +57,6 @@
         }
     </style>
 </head>
-
 <body>
     <div id="sidebar"></div>
     <div class="container">
@@ -81,22 +66,19 @@
             <input type="date" id="start_date">
             <label for="end_date">To</label>
             <input type="date" id="end_date">
-            <button id="registeration">Registration</button>
+            <button id="registration">Registration</button>
             <button id="closeButton">Close</button>
         </div>
-
         <table class="date-table">
             <thead>
                 <tr>
                     <th>Room Type</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody id="date_container">
             </tbody>
         </table>
     </div>
-
     <script>
         function populateDates() {
             const fromDateInput = document.getElementById('start_date');
@@ -107,14 +89,8 @@
 
             const fromDate = new Date(fromDateInput.value);
 
-            if (isNaN(fromDate.getTime())) {
-                console.error('Invalid "From" date selected');
-                return;
-            }
-
             const headerRow = document.querySelector('.date-table thead tr');
-            const tbody = document.querySelector('.date-table tbody');
-            tbody.innerHTML = '';
+            headerRow.innerHTML = '<th>Room Type</th><th>Status</th>';
 
             const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -127,7 +103,7 @@
                 const day = String(futureDate.getDate()).padStart(2, '0');
 
                 const th = document.createElement('th');
-                th.innerHTML = `<div>${dayName}</div><div>${day}-${month}-${year}</div>`;
+                th.innerHTML = `${dayName}<br>${day}-${month}-${year}`;
                 headerRow.appendChild(th);
             }
 
@@ -175,14 +151,8 @@
             return date.toISOString().split('T')[0];
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            populateDates();
-        });
-
-        document.getElementById('start_date').addEventListener('change', function() {
-            populateDates();
-        });
-
+        document.addEventListener('DOMContentLoaded', populateDates);
+        document.getElementById('start_date').addEventListener('change', populateDates);
         document.getElementById('end_date').addEventListener('change', function() {
             document.getElementById('start_date').max = this.value;
         });
@@ -201,5 +171,4 @@
         includeContent('menu.html', 'sidebar');
     </script>
 </body>
-
 </html>
