@@ -7,11 +7,18 @@
     <title>Check-Out</title>
     <link rel="stylesheet" href="./style11.css">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
         #container {
             padding: 20px;
             background-color: #ffffff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             width: 90%;
+            margin: 20px auto;
         }
 
         #container table {
@@ -40,6 +47,7 @@
             width: 95%;
             padding: 10px 0;
             text-align: center;
+            margin: 20px auto;
         }
 
         .navbar button {

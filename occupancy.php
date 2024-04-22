@@ -37,12 +37,13 @@
             width: 100%;
             margin-top: 20px;
         }
-        .date-table th, .date-table td {
+         .date-table td {
             border: 1px solid black;
             padding: 10px;
             text-align: center;
         }
         .date-table th {
+            border: 1px solid black;
             background-color: #f2f2f2;
         }
         .date-controls {
@@ -66,6 +67,7 @@
             <input type="date" id="start_date">
             <label for="end_date">To</label>
             <input type="date" id="end_date">
+            <button id="reservation">Reservation</button>
             <button id="registration">Registration</button>
             <button id="closeButton">Close</button>
         </div>
@@ -103,7 +105,8 @@
                 const day = String(futureDate.getDate()).padStart(2, '0');
 
                 const th = document.createElement('th');
-                th.innerHTML = `${dayName}<br>${day}-${month}-${year}`;
+                const formattedDate = isNaN(futureDate.getTime()) ? '' : `${dayName ? dayName + '<br>' : ''}${day}-${month}-${year}`;
+                th.innerHTML = formattedDate;
                 headerRow.appendChild(th);
             }
 

@@ -102,32 +102,87 @@
             drivinglicenseDetails.style.display = idProof === 'drivinglicense' ? 'block' : 'none';
             passportDetails.style.display = idProof === 'passport' ? 'block' : 'none';
         }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const table = document.getElementById('dataTable');
-
-            table.addEventListener('click', function(e) {
-                const row = e.target.closest('tr');
-                if (row && table.contains(row)) { // Check if the clicked element is a row within the table
-                    const rowId = row.cells[0].textContent;
-                    fetchData(rowId);
-                }
-            });
-        });
-
-        function fetchData(rowId) {
-            const xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState === 4 && this.status === 200) {
-                    // Handling the response here
-                    console.log(this.responseText);
-                }
-            };
-            xhttp.open("GET", `fetgue.php?id=${rowId}`, true);
-            xhttp.send();
-        }
     </script>
 </head>
+
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "menu";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$rowId = isset($_GET['id']) ? $_GET['id'] : null;
+
+if (!empty($rowId)) {
+    $sql = "SELECT * FROM booking WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $rowId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $checkInDate = isset($row["checkInDate"]) ? $row["checkInDate"] : "";
+        $arrivalTime = isset($row["arrivalTime"]) ? $row["arrivalTime"] : "";
+        $checkOutDate = isset($row["checkOutDate"]) ? $row["checkOutDate"] : "";
+        $departureTime = isset($row["departureTime"]) ? $row["departureTime"] : "";
+        $guestTitle = isset($row["guestTitle"]) ? $row["guestTitle"] : "";
+        $guestName = isset($row["guestName"]) ? $row["guestName"] : "";
+        $gender = isset($row["gender"]) ? $row["gender"] : "";
+        $number = isset($row["number"]) ? $row["number"] : "";
+        $address = isset($row["address"]) ? $row["address"] : "";
+        $city = isset($row["city"]) ? $row["city"] : "";
+        $pincode = isset($row["pincode"]) ? $row["pincode"] : "";
+        $idProof = isset($row["idproof"]) ? $row["idproof"] : "";
+        $adharcardNumber = isset($row["adharcardNumber"]) ? $row["adharcardNumber"] : "";
+        $pancardNumber = isset($row["pancardNumber"]) ? $row["pancardNumber"] : "";
+        $drivinglicenseNumber = isset($row["drivinglicenseNumber"]) ? $row["drivinglicenseNumber"] : "";
+        $passportNumber = isset($row["passportNumber"]) ? $row["passportNumber"] : "";
+        $nationality = isset($row["nationality"]) ? $row["nationality"] : "";
+        $email = isset($row["email"]) ? $row["email"] : "";
+        $companyName = isset($row["companyName"]) ? $row["companyName"] : "";
+        $roomType = isset($row["roomType"]) ? $row["roomType"] : "";
+        $roomNumber = isset($row["roomNumber"]) ? $row["roomNumber"] : "";
+        $plan = isset($row["plan"]) ? $row["plan"] : "";
+        $billingInstruction = isset($row["billingInstruction"]) ? $row["billingInstruction"] : "";
+        $discount = isset($row["discount"]) ? $row["discount"] : "";
+        $advance = isset($row["advance"]) ? $row["advance"] : "";
+        $roomCharge = isset($row["roomCharge"]) ? $row["roomCharge"] : "";
+        $foodCharge = isset($row["foodCharge"]) ? $row["foodCharge"] : "";
+        $cgstPercentage = isset($row["cgstPercentage"]) ? $row["cgstPercentage"] : "";
+        $sgstPercentage = isset($row["sgstPercentage"]) ? $row["sgstPercentage"] : "";
+        $discountAmount = isset($row["discountAmount"]) ? $row["discountAmount"] : "";
+        $cgstAmount = isset($row["cgstAmount"]) ? $row["cgstAmount"] : "";
+        $sgstAmount = isset($row["sgstAmount"]) ? $row["sgstAmount"] : "";
+        $extraCharge = isset($row["extraCharge"]) ? $row["extraCharge"] : "";
+        $totalAmount = isset($row["totalAmount"]) ? $row["totalAmount"] : "";
+        $paymentMode = isset($row["paymentMode"]) ? $row["paymentMode"] : "";
+        $debitCardNumber = isset($row["debitCardNumber"]) ? $row["debitCardNumber"] : "";
+        $debitCardHolder = isset($row["debitCardHolder"]) ? $row["debitCardHolder"] : "";
+        $debitCardExpiry = isset($row["debitCardExpiry"]) ? $row["debitCardExpiry"] : "";
+        $debitCardCVV = isset($row["debitCardCVV"]) ? $row["debitCardCVV"] : "";
+        $creditCardType = isset($row["creditCardType"]) ? $row["creditCardType"] : "";
+        $creditCardNumber = isset($row["creditCardNumber"]) ? $row["creditCardNumber"] : "";
+        $creditCardHolder = isset($row["creditCardHolder"]) ? $row["creditCardHolder"] : "";
+        $creditCardExpiry = isset($row["creditCardExpiry"]) ? $row["creditCardExpiry"] : "";
+        $creditCardCVV = isset($row["creditCardCVV"]) ? $row["creditCardCVV"] : "";
+        $Upiid = isset($row["Upiid"]) ? $row["Upiid"] : "";
+        $stmt->close();
+    } else {
+        echo "0 results";
+    }
+} else {
+    echo "No ID provided";
+}
+
+$conn->close();
+?>
 
 <body>
     <div id="sidebar"></div>
@@ -227,7 +282,7 @@
                             <option value="double room non-ac" <?php if (isset($roomType) && $roomType == "double room non-ac") echo "selected"; ?>>Double Room NON AC</option>
                         </select><br>
                         <label for="roomumber"><b>Room No.</b></label>
-                        <select id="room" name="room" value="<?php echo isset($roomNumber) ? $roomNumber : ""; ?>">
+                        <select id="room" name="room">
                             <option value=" "> </option>
                             <option value="101" <?php if (isset($roomNumber) && $roomNumber == "101") echo "selected"; ?>>101</option>
                             <option value="102" <?php if (isset($roomNumber) && $roomNumber == "102") echo "selected"; ?>>102</option>
@@ -239,7 +294,12 @@
                             <option value="108" <?php if (isset($roomNumber) && $roomNumber == "108") echo "selected"; ?>>108</option>
                             <option value="109" <?php if (isset($roomNumber) && $roomNumber == "109") echo "selected"; ?>>109</option>
                             <option value="110" <?php if (isset($roomNumber) && $roomNumber == "110") echo "selected"; ?>>110</option>
-                        </select><br>
+                            <option value="111" <?php if (isset($roomNumber) && $roomNumber == "111") echo "selected"; ?>>111</option>
+                            <option value="112" <?php if (isset($roomNumber) && $roomNumber == "112") echo "selected"; ?>>112</option>
+                            <option value="113" <?php if (isset($roomNumber) && $roomNumber == "113") echo "selected"; ?>>113</option>
+                            <option value="114" <?php if (isset($roomNumber) && $roomNumber == "114") echo "selected"; ?>>114</option>
+                        </select>
+                        <br>
                         <label for="plan"><b>Plan</b></label>
                         <select id="plan" name="plan" value="<?php echo isset($plan) ? $plan : ""; ?>">
                             <option value=" "> </option>
@@ -361,8 +421,5 @@
         }
         includeContent('menu.html', 'sidebar');
     </script>
-
-
 </body>
-
 </html>

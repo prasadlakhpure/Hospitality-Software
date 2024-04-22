@@ -20,7 +20,8 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
@@ -151,32 +152,37 @@
             filterRows(6, date => date.toISOString().split('T')[0] >= new Date().toISOString().split('T')[0]);
         }
 
-        function checkIn() {
-            var rows = document.querySelectorAll("table tr:not(:first-child)");
-            var found = Array.from(rows).some(row => {
-                if (new Date(row.cells[5].textContent).toISOString().split('T')[0] === new Date().toISOString().split('T')[0]) {
-                    redirectToCheckPage(row);
-                    return true;
-                }
-            });
 
-            if (!found) {
-                alert("No check-ins for today found.");
+        var rows = document.querySelectorAll("table tr:not(:first-child)");
+        rows.forEach(function(row) {
+            row.addEventListener('click', function() {
+                rows.forEach(r => r.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+
+        function checkIn() {
+            var selectedRow = document.querySelector('table tr.selected');
+            if (selectedRow) {
+                var id = selectedRow.getAttribute('data-id');
+                redirectToCheckPage(id);
+            } else {
+                alert("Please select a row first.");
             }
         }
 
-        function redirectToCheckPage(row) {
-            const id = row.getAttribute('data-id');
+        function redirectToCheckPage(id) {
             window.location.href = `check.php?id=${id}`;
         }
 
         function includeContent(url, targetId) {
             fetch(url).then(response => response.text())
-            .then(html => {
-                document.getElementById(targetId).innerHTML = html;
-            }).catch(error => {
-                console.error('Error loading the sidebar:', error);
-            });
+                .then(html => {
+                    document.getElementById(targetId).innerHTML = html;
+                }).catch(error => {
+                    console.error('Error loading the sidebar:', error);
+                });
         }
 
         includeContent('menu.html', 'sidebar');
