@@ -15,30 +15,23 @@
     $password = "";
     $dbname = "menu";
 
+    // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
 
+    // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
 
+    // Sanitize the input
+    $rowId = isset($_GET['id']) ? intval($_GET['id']) : null;
 
-    $rowId = isset($_GET['id']) ? $_GET['id'] : null;
-
-    if ($rowId === null) {
+    if ($rowId === null || $rowId <= 0) {
         die("Invalid data sent from the client");
     }
 
-    $selectSql = "SELECT 
-        date, time, guestTitle, guestName, gender, number, address, city, pincode, idProof,
-        adharcardNumber, pancardNumber, drivinglicenseNumber, passportNumber, nationality, email, 
-        raNumber, companyName, checkInDate, arrivalTime, checkOutDate, departureTime, 
-        adults, children, roomType, roomNumber, plan, guestStatus, billingInstruction, 
-        discount, advance, roomCharge, foodCharge, cgstPercentage, sgstPercentage, 
-        extraCharge, totalAmount, paymentMode, debitCardNumber,
-        debitCardHolder, debitCardExpiry, debitCardCVV, 
-        creditCardType, creditCardNumber, creditCardHolder, creditCardExpiry,
-        creditCardCVV, Upiid 
-        FROM booking WHERE id = ?";
+    // Prepare and execute select query
+    $selectSql = "SELECT * FROM booking WHERE id = ?";
     $selectStmt = $conn->prepare($selectSql);
     $selectStmt->bind_param("i", $rowId);
 
@@ -46,6 +39,7 @@
         die("Error fetching row: " . $selectStmt->error);
     }
 
+    // Bind result variables
     $selectStmt->bind_result(
         $date,
         $time,
@@ -94,33 +88,30 @@
         $creditCardHolder,
         $creditCardExpiry,
         $creditCardCVV,
-        $Upiid
+        $Upiid,
+        $rowId
     );
+    
 
+    // Fetch data
     $selectStmt->fetch();
 
+    // Close select statement
     $selectStmt->close();
 
+    // Include booking form
     include('booking.php');
 
+    // Process form submission
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $updateSql = "UPDATE booking SET 
-            date = ?, time = ?, guestTitle = ?, guestName = ?, gender = ?, number = ?, 
-            address = ?, city = ?, pincode = ?, idProof = ?, adharcardNumber = ?, 
-            pancardNumber = ?, drivinglicenseNumber = ?, passportNumber = ?, nationality = ?, 
-            email = ?, raNumber = ?, companyName = ?, checkInDate = ?, arrivalTime = ?, 
-            checkOutDate = ?, departureTime = ?, adults = ?, children = ?, roomType = ?, 
-            roomNumber = ?, plan = ?, guestStatus = ?, billingInstruction = ?, discount = ?, 
-            advance = ?, roomCharge = ?, foodCharge = ?, cgstPercentage = ?, sgstPercentage = ?, 
-            extraCharge = ?, totalAmount = ?, paymentMode = ?, debitCardNumber = ?, 
-            debitCardHolder = ?, debitCardExpiry = ?, debitCardCVV = ?, creditCardType = ?, 
-            creditCardNumber = ?, creditCardHolder = ?, creditCardExpiry = ?, 
-            creditCardCVV = ?, Upiid = ? WHERE id = ?";
+        // Prepare update query
+        $updateSql = "UPDATE booking SET date = ?, time = ?, guestTitle = ?, guestName = ?, gender = ?, number = ?, address = ?, city = ?, pincode = ?, idProof = ?, adharcardNumber = ?, pancardNumber = ?, drivinglicenseNumber = ?, passportNumber = ?, nationality = ?, email = ?, raNumber = ?, companyName = ?, checkInDate = ?, arrivalTime = ?, checkOutDate = ?, departureTime = ?, adults = ?, children = ?, roomType = ?, roomNumber = ?, plan = ?, guestStatus = ?, billingInstruction = ?, discount = ?, advance = ?, roomCharge = ?, foodCharge = ?, cgstPercentage = ?, sgstPercentage = ?, extraCharge = ?, totalAmount = ?, paymentMode = ?, debitCardNumber = ?, debitCardHolder = ?, debitCardExpiry = ?, debitCardCVV = ?, creditCardType = ?, creditCardNumber = ?, creditCardHolder = ?, creditCardExpiry = ?, creditCardCVV = ?, Upiid = ? WHERE id = ?";
 
+        // Prepare and bind update statement
         $updateStmt = $conn->prepare($updateSql);
 
         $updateStmt->bind_param(
-            "sssssssssssssssssssssssssssssssssssssssi",
+            "ssssssssssssssssssssssssssssssssssssssi",
             $_POST['date'],
             $_POST['time'],
             $_POST['guestTitle'],
@@ -172,15 +163,18 @@
             $rowId
         );
 
+        // Execute update statement
         if (!$updateStmt->execute()) {
             die("Error updating row: " . $updateStmt->error);
         }
 
+        // Close update statement
         $updateStmt->close();
 
         echo "Row updated successfully!";
     }
 
+    // Close connection
     $conn->close();
     ?>
 </body>
