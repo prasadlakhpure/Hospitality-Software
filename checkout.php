@@ -112,7 +112,7 @@
                             <th>Plan</th>
                         </tr>";
                 while ($row = $result->fetch_assoc()) {
-                    echo "<tr>
+                    echo "<tr id='row{$row['id']}' onclick='selectRow({$row['id']})'>
                             <td>{$row['id']}</td>
                             <td>{$row['checkInDate']}</td>
                             <td>{$row['checkOutDate']}</td>
@@ -131,7 +131,7 @@
             ?>
         </div>
         <div class="navbar">
-            <button onclick="">Button 1</button>
+            <button onclick="Samplebill()">Sample Bill</button>
             <button onclick="">Button 2</button>
             <button onclick="">Button 3</button>
             <button onclick="">Button 4</button>
@@ -152,6 +152,29 @@
                 });
         }
         includeContent('menu.html', 'sidebar');
+
+        var selectedRowId = null;
+
+        function selectRow(rowId) {
+            if (selectedRowId) {
+                document.getElementById('row' + selectedRowId).classList.remove('selected');
+            }
+            selectedRowId = rowId;
+            document.getElementById('row' + rowId).classList.add('selected');
+        }
+
+        function Samplebill() {
+            if (selectedRowId) {
+                var container = document.getElementById("container");
+                var sampleBillContent = `
+                    <h2>Sample Bill for Booking ID: ${selectedRowId}</h2>
+                    <p>Sample bill content goes here...</p>
+                `;
+                container.innerHTML = sampleBillContent;
+            } else {
+                alert("Please select a row first.");
+            }
+        }
     </script>
 
 </body>

@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
- 
+
     $date = $_POST['date'];
     $time = $_POST['myTime'];
     $guestTitle = $_POST['guestTitle'];
@@ -64,16 +64,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $upiId = $_POST['Upiid'];
 
     if (isset($_POST['update']) && $_POST['update'] == 'update') {
-        
-        $id = $_POST['id']; 
-        $fetch_id_sql = "SELECT * FROM booking";
-        $result = $conn->query($fetch_id_sql);  
-        if ($result->num_rows > 0) {
-          
-            $row = $result->fetch_assoc();
-            $id = $row['id']; 
 
-           
+        $id = $_POST['id'];
+        $fetch_id_sql = "SELECT * FROM booking";
+        $result = $conn->query($fetch_id_sql);
+        if ($result->num_rows > 0) {
+
+            $row = $result->fetch_assoc();
+            $id = $row['id'];
+
+
             $sql = "UPDATE booking SET 
                 date='$date', time='$time', guestTitle='$guestTitle', guestName='$guestName', gender='$gender', 
                 address='$address', city='$city', pincode='$pincode', idProof='$idProof', nationality='$nationality', 
@@ -91,22 +91,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 WHERE id = $id";
         } else {
             echo "ID not found in the database.";
-            exit; 
+            exit;
         }
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'submit') {
-       
+
         $sql = "INSERT INTO booking (date, time, guestTitle, guestName, gender, number, address, city, pincode, idProof, adharcardNumber, pancardNumber, drivinglicenseNumber, passportNumber, nationality, email, raNumber, companyName, checkInDate, arrivalTime, checkOutDate, departureTime, adults, children, roomType, roomNumber, plan, guestStatus, billingInstruction, discount, advance, roomCharge, foodCharge, cgstPercentage, sgstPercentage, extraCharge, totalAmount, paymentMode, debitCardNumber, debitCardHolder, debitCardExpiry, debitCardCVV, creditCardType, creditCardNumber, creditCardHolder, creditCardExpiry, creditCardCVV, Upiid) 
                 VALUES ('$date', '$time', '$guestTitle', '$guestName', '$gender', '$number', '$address', '$city', '$pincode', '$idProof','$adharcardNumber','$pancardNumber','$drivinglicenseNumber','$passportNumber', '$nationality', '$email', '$raNumber', '$companyName', '$checkInDate', '$arrivalTime', '$checkOutDate', '$departureTime', '$adults', '$children', '$roomType', '$roomNumber', '$plan', '$guestStatus', '$billingInstruction', '$discount', '$advance', '$roomCharge', '$foodCharge', '$cgstPercentage', '$sgstPercentage', '$extraCharge', '$totalAmount', '$paymentMode','$debitCardNumber', '$debitCardHolder', '$debitCardExpiry', '$debitCardCVV','$creditCardType', '$creditCardNumber', '$creditCardHolder', '$creditCardExpiry','$creditCardCVV', '$upiId')";
     }
 
-  
+
     if ($conn->query($sql) === TRUE) {
         echo "Record updated/inserted successfully";
         header("Location: display.php");
         exit;
-    } else { 
+    } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 }
-
-?>

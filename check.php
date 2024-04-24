@@ -105,6 +105,86 @@
     </script>
 </head>
 
+<?php
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "menu";
+
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    $rowId = isset($_GET['id']) ? $_GET['id'] : null;
+
+    if (!empty($rowId)) {
+        $sql = "SELECT * FROM booking WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $rowId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $checkInDate = isset($row["checkInDate"]) ? $row["checkInDate"] : "";
+            $arrivalTime = isset($row["arrivalTime"]) ? $row["arrivalTime"] : "";
+            $checkOutDate = isset($row["checkOutDate"]) ? $row["checkOutDate"] : "";
+            $departureTime = isset($row["departureTime"]) ? $row["departureTime"] : "";
+            $guestTitle = isset($row["guestTitle"]) ? $row["guestTitle"] : "";
+            $guestName = isset($row["guestName"]) ? $row["guestName"] : "";
+            $gender = isset($row["gender"]) ? $row["gender"] : "";
+            $number = isset($row["number"]) ? $row["number"] : "";
+            $address = isset($row["address"]) ? $row["address"] : "";
+            $city = isset($row["city"]) ? $row["city"] : "";
+            $pincode = isset($row["pincode"]) ? $row["pincode"] : "";
+            $idProof = isset($row["idproof"]) ? $row["idproof"] : "";
+            $adharcardNumber = isset($row["adharcardNumber"]) ? $row["adharcardNumber"] : "";
+            $pancardNumber = isset($row["pancardNumber"]) ? $row["pancardNumber"] : "";
+            $drivinglicenseNumber = isset($row["drivinglicenseNumber"]) ? $row["drivinglicenseNumber"] : "";
+            $passportNumber = isset($row["passportNumber"]) ? $row["passportNumber"] : "";
+            $nationality = isset($row["nationality"]) ? $row["nationality"] : "";
+            $email = isset($row["email"]) ? $row["email"] : "";
+            $companyName = isset($row["companyName"]) ? $row["companyName"] : "";
+            $roomType = isset($row["roomType"]) ? $row["roomType"] : "";
+            $roomNumber = isset($row["roomNumber"]) ? $row["roomNumber"] : "";
+            $plan = isset($row["plan"]) ? $row["plan"] : "";
+            $billingInstruction = isset($row["billingInstruction"]) ? $row["billingInstruction"] : "";
+            $discount = isset($row["discount"]) ? $row["discount"] : "";
+            $advance = isset($row["advance"]) ? $row["advance"] : "";
+            $roomCharge = isset($row["roomCharge"]) ? $row["roomCharge"] : "";
+            $foodCharge = isset($row["foodCharge"]) ? $row["foodCharge"] : "";
+            $cgstPercentage = isset($row["cgstPercentage"]) ? $row["cgstPercentage"] : "";
+            $sgstPercentage = isset($row["sgstPercentage"]) ? $row["sgstPercentage"] : "";
+            $discountAmount = isset($row["discountAmount"]) ? $row["discountAmount"] : "";
+            $cgstAmount = isset($row["cgstAmount"]) ? $row["cgstAmount"] : "";
+            $sgstAmount = isset($row["sgstAmount"]) ? $row["sgstAmount"] : "";
+            $extraCharge = isset($row["extraCharge"]) ? $row["extraCharge"] : "";
+            $totalAmount = isset($row["totalAmount"]) ? $row["totalAmount"] : "";
+            $paymentMode = isset($row["paymentMode"]) ? $row["paymentMode"] : "";
+            $debitCardNumber = isset($row["debitCardNumber"]) ? $row["debitCardNumber"] : "";
+            $debitCardHolder = isset($row["debitCardHolder"]) ? $row["debitCardHolder"] : "";
+            $debitCardExpiry = isset($row["debitCardExpiry"]) ? $row["debitCardExpiry"] : "";
+            $debitCardCVV = isset($row["debitCardCVV"]) ? $row["debitCardCVV"] : "";
+            $creditCardType = isset($row["creditCardType"]) ? $row["creditCardType"] : "";
+            $creditCardNumber = isset($row["creditCardNumber"]) ? $row["creditCardNumber"] : "";
+            $creditCardHolder = isset($row["creditCardHolder"]) ? $row["creditCardHolder"] : "";
+            $creditCardExpiry = isset($row["creditCardExpiry"]) ? $row["creditCardExpiry"] : "";
+            $creditCardCVV = isset($row["creditCardCVV"]) ? $row["creditCardCVV"] : "";
+            $Upiid = isset($row["Upiid"]) ? $row["Upiid"] : "";
+            $stmt->close();
+        } else {
+            echo "0 results";
+        }
+    } else {
+        echo "No ID provided";
+    }
+
+    $conn->close();
+    ?>
+
+
 <body>
     <div id="sidebar"></div>
     <div class="container" id="content-checkin">

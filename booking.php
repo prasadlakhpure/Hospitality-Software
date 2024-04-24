@@ -68,25 +68,6 @@
             document.getElementById('cgstAmountInput').value = cgstAmount.toFixed(2);
             document.getElementById('sgstAmountInput').value = sgstAmount.toFixed(2);
             document.getElementById('totalAmountAfterTaxesInput').value = totalAmount.toFixed(2);
-            // var roomCharge = parseFloat(document.getElementById('roomCharge').value);
-            // var cgstPercentage = parseFloat(document.getElementById('cgst').value);
-            // var sgstPercentage = parseFloat(document.getElementById('sgst').value);
-            // var discountPercentage = parseFloat(document.getElementById('discount').value);
-            // var advance = parseFloat(document.getElementById('advance').value);
-
-            // var discountAmount = roomCharge * (discountPercentage / 100);
-            // var foodCharge = parseFloat(document.getElementById('foodcharge').value);
-            // var cgstAmount = (roomCharge - discountAmount + foodCharge) * (cgstPercentage / 100);
-            // var sgstAmount = (roomCharge - discountAmount + foodCharge) * (sgstPercentage / 100);
-            // var extraCharge = parseFloat(document.getElementById('extracharge').value);
-
-            // var totalAmount = roomCharge - discountAmount + foodCharge + cgstAmount + sgstAmount + extraCharge -
-            //     advance;
-
-            // document.getElementById('discountAmount').value = discountAmount.toFixed(2);
-            // document.getElementById('cgstAmountInput').value = cgstAmount.toFixed(2);
-            // document.getElementById('sgstAmountInput').value = sgstAmount.toFixed(2);
-            // document.getElementById('totalAmountAfterTaxesInput').value = totalAmount.toFixed(2);
         }
 
 
