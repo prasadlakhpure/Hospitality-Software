@@ -22,10 +22,8 @@ $selectSql = "SELECT
     raNumber, companyName, checkInDate, arrivalTime, checkOutDate, departureTime, 
     adults, children, roomType, roomNumber, plan, guestStatus, billingInstruction, 
     discount, advance, roomCharge, foodCharge, cgstPercentage, sgstPercentage, 
-    extraCharge, totalAmount, paymentMode, debitCardNumber,
-    debitCardHolder, debitCardExpiry, debitCardCVV, 
-    creditCardType, creditCardNumber, creditCardHolder, creditCardExpiry,
-    creditCardCVV, Upiid 
+    extraCharge, totalAmount, paymentMode, debitCardNumber, debitCardHolder, debitCardExpiry, debitCardCVV, 
+    creditCardType, creditCardNumber, creditCardHolder, creditCardExpiry, creditCardCVV, Upiid 
     FROM booking WHERE id = ?";
 $selectStmt = $conn->prepare($selectSql);
 $selectStmt->bind_param("i", $rowId);

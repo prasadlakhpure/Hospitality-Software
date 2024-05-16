@@ -46,12 +46,27 @@
             background-color: #333333;
             width: 95%;
             padding: 10px 0;
-            text-align: center;
+            text-align: right;
             margin: 20px auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar span {
+            margin-right: 20px;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .navbar .line1,
+        .navbar .line2 {
+            display: flex;
+            align-items: center;
         }
 
         .navbar button {
-            margin: 0 10px;
             padding: 10px 20px;
             font-size: 16px;
             border: none;
@@ -59,6 +74,7 @@
             border-radius: 4px;
             background-color: #555555;
             color: #ffffff;
+            transition: background-color 0.3s ease;
         }
 
         .navbar button:hover {
@@ -76,6 +92,35 @@
         .selected {
             background-color: #3498db;
             color: #fff;
+        }
+
+        .navbar span,
+        .navbar button,
+        .navbar input[type="date"] {
+            margin-left: 10px;
+        }
+
+        /* CSS for Sample Bill */
+        #sample-bill-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #sample-bill-table th,
+        #sample-bill-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        #sample-bill-table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #sample-bill-table tr:nth-child(even) {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
@@ -131,12 +176,21 @@
             ?>
         </div>
         <div class="navbar">
+            <div class="line1">
+                <span id="todaysroomoccupied">Todays Room Occupied : </span>
+                <span id="checkIn">Todays Check-In : </span>
+                <span id="exceptedarrivals">Expected Arrivals : </span>
+                <span id="Previousdaysoccupany">Previous Days Occupancy : </span>
+            </div>
+            <div class="line2">
+                <span id="totalpax">Todays Pax : </span>
+                <span id="checkOut">Todays Check-Out : </span>
+                <span id="excepteddeparture">Expected Departure : </span>
+                <span id="todaysoutstanding">Todays Outstanding : </span>
+            </div>
+            <button onclick="prepare()">Prepare</button>
             <button onclick="Samplebill()">Sample Bill</button>
-            <button onclick="">Button 2</button>
-            <button onclick="">Button 3</button>
-            <button onclick="">Button 4</button>
-            <button onclick="">Button 5</button>
-            <button onclick="">Button 6</button>
+            <button onclick="window.location.href = 'menu.html';">Close</button>
         </div>
     </div>
 
@@ -165,17 +219,38 @@
 
         function Samplebill() {
             if (selectedRowId) {
-                var container = document.getElementById("container");
-                var sampleBillContent = `
-                    <h2>Sample Bill for Booking ID: ${selectedRowId}</h2>
-                    <p>Sample bill content goes here...</p>
-                `;
-                container.innerHTML = sampleBillContent;
+                var selectedRow = document.getElementById('row' + selectedRowId);
+                var id = selectedRow.cells[0].innerHTML;
+                var checkInDate = selectedRow.cells[1].innerHTML;
+                var checkOutDate = selectedRow.cells[2].innerHTML;
+                var guestTitle = selectedRow.cells[3].innerHTML;
+                var guestName = selectedRow.cells[4].innerHTML;
+                var roomNumber = selectedRow.cells[5].innerHTML;
+                var roomType = selectedRow.cells[6].innerHTML;
+                var plan = selectedRow.cells[7].innerHTML;
+
+                // Creating a table for the sample bill
+                var sampleBillTable = `
+                    <table>
+                        <tr><th colspan="2">Sample Bill</th></tr>
+                        <tr><td>ID:</td><td>${id}</td></tr>
+                        <tr><td>Check-In Date:</td><td>${checkInDate}</td></tr>
+                        <tr><td>Check-Out Date:</td><td>${checkOutDate}</td></tr>
+                        <tr><td>Guest Title:</td><td>${guestTitle}</td></tr>
+                        <tr><td>Guest Name:</td><td>${guestName}</td></tr>
+                        <tr><td>Room Number:</td><td>${roomNumber}</td></tr>
+                        <tr><td>Room Type:</td><td>${roomType}</td></tr>
+                        <tr><td>Plan:</td><td>${plan}</td></tr>
+                    </table>`;
+
+                // Replace the content of a div with the sample bill table
+                document.getElementById('container').innerHTML = sampleBillTable;
             } else {
-                alert("Please select a row first.");
+                alert('Please select a booking to generate a sample bill.');
             }
         }
     </script>
+
 
 </body>
 

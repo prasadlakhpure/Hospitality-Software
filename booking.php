@@ -48,8 +48,6 @@
         }
 
         function calculateTaxes() {
-
-            // new code
             var roomCharge = parseFloat(document.getElementById('roomCharge').value) || 0;
             var cgstPercentage = parseFloat(document.getElementById('cgst').value) || 0;
             var sgstPercentage = parseFloat(document.getElementById('sgst').value) || 0;
